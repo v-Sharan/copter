@@ -28,7 +28,7 @@ const plugins = [
     favicon: path.resolve(projectRoot, 'assets', 'icons', 'favicon.ico'),
     meta: htmlMetaTags,
     template: path.resolve(projectRoot, 'index.html'),
-    title: 'Dhaksha Live | The Next-generation Drone Software Suite',
+    title: 'MIT GCS | The Next-generation Drone Software Suite',
   }),
 ];
 

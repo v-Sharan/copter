@@ -6,6 +6,7 @@
 import config from 'config';
 
 import isNil from 'lodash-es/isNil';
+import get from 'lodash-es/get';
 import pTimeout from 'p-timeout';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -24,6 +25,8 @@ import { addLogItem } from '~/features/log/slice';
 import {
   calculateAndStoreClockSkew,
   disconnectFromServer,
+  updateIsServerLocation,
+  updateServerLocation,
 } from '~/features/servers/actions';
 import {
   getClockSkewInMilliseconds,
@@ -569,6 +572,22 @@ async function executeTasksAfterConnection(dispatch, getState) {
     if (features.length > 0) {
       dispatch(addServerFeatures(features));
     }
+
+    const isLocation = await messageHub.query.isServerHasLocation();
+
+    if (isLocation) {
+      const serverLocationResponse = await messageHub.sendMessage({
+        type: 'X-LOC-STATUS',
+      });
+      const body = serverLocationResponse.body;
+      if (Array.isArray(get(body, 'location'))) {
+        dispatch(updateServerLocation(body.location));
+      }
+    } else {
+      dispatch(updateServerLocation({ lat: 0, lon: 0 }));
+    }
+
+    dispatch(updateIsServerLocation(isLocation));
 
     // Set the license received in the response from the server.
     dispatch(setServerLicense(await messageHub.query.getLicenseInformation()));

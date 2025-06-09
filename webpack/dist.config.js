@@ -47,7 +47,7 @@ module.exports = merge(baseConfig, {
       template: path.resolve(projectRoot, 'index.html'),
       filename: path.resolve(outputDir, 'index.html'),
       hash: true /* for cache busting */,
-      title: 'Dhaksha Live | The Next-generation Drone Software Suite',
+      title: 'MIT GCS | The Next-generation Drone Software Suite',
     }),
   ],
 });

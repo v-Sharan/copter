@@ -15,8 +15,6 @@ import {
 import { formatNumberSafely, shortTimeAgoFormatter } from '~/utils/formatting';
 
 import { getUAVById } from './selectors';
-import { MessageSemantics } from '~/features/snackbar/types';
-import { showNotification } from '~/features/snackbar/slice';
 
 // TODO: Use the internal `naText` of `MiniTable` instead
 const naText = <span className='muted'>—</span>;
@@ -28,6 +26,8 @@ const StatusSummaryMiniTable = ({
   localPosition,
   mode,
   position,
+  distance_from_GCS,
+  bearing_from_GCS,
   dispatch,
 }) => {
   const { lat, lon, amsl, ahl, agl } = position || {};
@@ -106,6 +106,19 @@ const StatusSummaryMiniTable = ({
     );
   }
 
+  if (distance_from_GCS) {
+    rows.push([
+      'Distance From GCS',
+      formatNumberSafely(distance_from_GCS, 2, 'm', naText),
+    ]);
+  }
+
+  if (bearing_from_GCS) {
+    rows.push([
+      'Bearing From GCS',
+      formatNumberSafely(bearing_from_GCS, 2, 'm', naText),
+    ]);
+  }
   rows.push(['Heading', formatNumberSafely(heading, 1, '°', naText)], 'sep3', [
     'Last seen',
     lastUpdated ? (

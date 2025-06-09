@@ -20,6 +20,8 @@ export const {
   setServerSettingsDialogTab,
   showServerSettingsDialog,
   updateServerSettings,
+  updateServerLocation,
+  updateIsServerLocation,
 } = serverSettingsDialogActions;
 
 export const { closeAuthenticationDialog, showAuthenticationDialog } =

@@ -20,7 +20,7 @@ const SessionExpiryDialog = ({ onClose, open }) => (
     <DialogTitle>Session expired</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        Your demo session has expired. Thank you for evaluating Dhaksha Live!
+        Your demo session has expired. Thank you for evaluating MIT GCS!
       </DialogContentText>
       <Button fullWidth onClick={onClose}>
         Click here to return to your MIT account

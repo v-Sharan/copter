@@ -1,316 +1,159 @@
-import React, { useEffect, useState } from 'react';
-// import config from 'config';
+import React, { useEffect } from 'react';
 import { openOnLoadImage } from '~/features/show/slice';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import store from '~/store';
-import { Button, Box } from '@material-ui/core';
-import { showNotification } from '~/features/snackbar/slice';
-import { MessageSemantics } from '~/features/snackbar/types';
-import messageHub from '~/message-hub';
-import { makeStyles } from '@material-ui/core/styles';
+import { Button, Box, Typography } from '@material-ui/core';
+import { showError } from '~/features/snackbar/actions';
+import {
+  setImageNames,
+  toggleImageSelection,
+  selectAllImages,
+  clearImageSelection,
+} from '~/features/Imagery/slice';
+import './style.css';
+import { getImageNames, getSelectedImages } from '~/features/Imagery/selector';
 
-const { dispatch } = store;
-
-// const useStyles = makeStyles(
-//   (theme) => ({
-//     joystick: {
-//       display: 'flex',
-//       flexDirection: 'column',
-//       alignItems: 'center',
-//     },
-//     middleRow: {
-//       display: 'flex',
-//       justifyContent: 'center',
-//       width: '100%',
-//     },
-//     joystickButton: {
-//       margin: '5px',
-//       padding: '10px',
-//       fontSize: '18px',
-//       cursor: 'pointer',
-//     },
-
-//     joystickButtonUp: {
-//       alignSelf: 'center',
-//     },
-
-//     joystickbuttonDown: {
-//       alignSelf: 'center',
-//     },
-
-//     joystickButton: {
-//       marginLeft: '5px',
-//       marginRight: '5px',
-//     },
-
-//     allcamera: {
-//       display: 'flex',
-//       gap: 10,
-//     },
-//   }),
-//   { name: 'CameraPanel' }
-// );
-
-const CameraPanel = ({ onLoadImage }) => {
-  // const styles = useStyles();
-  const [url, setUrl] = useState([]);
-
-  // const handleURL = () => {
-  //   (async () => {
-  //     let urls = config['camera_url'];
-  //     console.log(urls);
-  //     try {
-  //       for (let i in urls) {
-  //         const res = await fetch(
-  //           `http://${urls[i].url}:8000/ping/${urls[i].url}`
-  //         );
-  //         if (!res.ok) {
-  //           store.dispatch(
-  //             showNotification({
-  //               message: `Connection to the Camera ${urls[i].id} is Failed`,
-  //               semantics: semantics.ERROR,
-  //             })
-  //           );
-  //           return;
-  //         }
-  //         const data = await res.json();
-  //         if (!Boolean(data.message)) {
-  //           store.dispatch(
-  //             showNotification({
-  //               message: `Connection to the Camera ${urls[i].id} is Failed`,
-  //               semantics: semantics.ERROR,
-  //             })
-  //           );
-  //           return;
-  //         }
-  //         store.dispatch(
-  //           showNotification({
-  //             message: `Connection to the Camera ${urls[i].id} is Success`,
-  //             semantics: semantics.SUCCESS,
-  //           })
-  //         );
-  //         urls[i].connection = true;
-  //         setUrl((prev) => [...prev, urls[i]]);
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //       store.dispatch(
-  //         showNotification({
-  //           message: `Connection to the Camera ${urls[i].id} is Failed in Catch`,
-  //           semantics: semantics.ERROR,
-  //         })
-  //       );
-  //     }
-  //   })();
-  // };
-
-  // useEffect(() => {
-  //   (async () => {
-  //     let urls = config['camera_url'];
-  //     store.dispatch(
-  //       showNotification({
-  //         message: `${urls?.length} length of the urls`,
-  //         semantics: semantics.SUCCESS,
-  //       })
-  //     );
-  //     try {
-  //       for (let i in urls) {
-  //         const res = await fetch(
-  //           `http://${urls[i].url}:8000/ping/${urls[i].url}`
-  //         );
-  //         if (!res.ok) {
-  //           store.dispatch(
-  //             showNotification({
-  //               message: `Connection to the Camera ${urls[i].id} is Failed`,
-  //               semantics: semantics.ERROR,
-  //             })
-  //           );
-  //           return;
-  //         }
-  //         const data = await res.json();
-  //         if (!Boolean(data.message)) {
-  //           store.dispatch(
-  //             showNotification({
-  //               message: `Connection to the Camera ${urls[i].id} is Failed`,
-  //               semantics: semantics.ERROR,
-  //             })
-  //           );
-  //           return;
-  //         }
-  //         store.dispatch(
-  //           showNotification({
-  //             message: `Connection to the Camera ${urls[i].id} is Success`,
-  //             semantics: semantics.SUCCESS,
-  //           })
-  //         );
-  //         urls[i].connection = true;
-  //         setUrl((prev) => [...prev, urls[i]]);
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   })();
-  // }, []);
-
-  // const handleTest = async () => {
-  //   console.log(url);
-  //   for (let x in url) {
-  //     console.log(`http://${url[x].url}:8000/single_test/${url[x].id}`);
-  //     const res = await fetch(
-  //       `http://${url[x].url}:8000/single_test/${url[x].id}`
-  //     );
-  //     console.log(res.ok);
-  //     if (!res.ok) {
-  //       store.dispatch(
-  //         showNotification({
-  //           message: `Testing to the Camera ${url[x].id} is Failed`,
-  //           semantics: semantics.ERROR,
-  //         })
-  //       );
-  //       return;
-  //     }
-  //     const data = await res.json();
-  //     if (typeof data.message == 'string') {
-  //       store.dispatch(
-  //         showNotification({
-  //           message: `Testing to the Camera ${url[x].id} is Failed`,
-  //           semantics: semantics.ERROR,
-  //         })
-  //       );
-  //     }
-  //     if (typeof data.message == 'boolean') {
-  //       store.dispatch(
-  //         showNotification({
-  //           message: `Testing to the Camera ${url[x].id} is Success`,
-  //           semantics: semantics.SUCCESS,
-  //         })
-  //       );
-  //     }
-  //   }
-  // };
-
-  // const handleStopCapture = async () => {
-  //   try {
-  //     for (let x in url) {
-  //       const res = await fetch(`http://${url[x].url}:8000/stop_capture`, {
-  //         method: 'POST',
-  //       });
-  //       if (!res.ok) {
-  //         store.dispatch(
-  //           showNotification({
-  //             message: `Stop Command to the Camera ${url[x].id} is Failed`,
-  //             semantics: semantics.ERROR,
-  //           })
-  //         );
-  //         return;
-  //       }
-  //       const data = await res.json();
-  //       if (typeof data.message == 'string') {
-  //         store.dispatch(
-  //           showNotification({
-  //             message: data.message,
-  //             semantics: semantics.INFO,
-  //           })
-  //         );
-  //       }
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
-  // const handleStartCapture = async () => {
-  //   try {
-  //     for (let x in url) {
-  //       const res = await fetch(`http://${url[x].url}:8000/start_capture`, {
-  //         method: 'POST',
-  //       });
-  //       if (!res.ok) {
-  //         store.dispatch(
-  //           showNotification({
-  //             message: `Start Command to the Camera ${url[x].id} is Failed`,
-  //             semantics: semantics.ERROR,
-  //           })
-  //         );
-  //         return;
-  //       }
-  //       const data = await res.json();
-  //       if (typeof data.message == 'string') {
-  //         store.dispatch(
-  //           showNotification({
-  //             message: data.message,
-  //             semantics: semantics.INFO,
-  //           })
-  //         );
-  //       }
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
-  // const handleLoadImage = () => {};
-
-  const handleTest = async (msg) => {
+const CameraPanel = ({ selectedImages, imgNames, dispatch }) => {
+  const handleLoadImageFromNuc = async () => {
     try {
-      const res = await messageHub.sendMessage({
-        type: 'X-CAMERA',
-        message: msg,
-      });
-      if (Boolean(res?.body?.message)) {
-        dispatch(
-          showNotification({
-            message: `${msg} Message sent`,
-            semantics: MessageSemantics.SUCCESS,
-          })
-        );
+      const res = await fetch('http://127.0.0.1:8000/get_image_list');
+      const { result } = await res.json();
+
+      if (result.length === 0) {
+        dispatch(showError('There is no Detected Image found in the Server'));
+        return;
       }
+
+      dispatch(setImageNames(result));
     } catch (e) {
-      dispatch(
-        showNotification({
-          message: `${msg} Command is Failed`,
-          semantics: MessageSemantics.ERROR,
-        })
-      );
+      console.log(e?.message);
+      dispatch(showError('Failed to load images from server'));
     }
   };
 
-  const handleStartCapture = () => {};
+  const handleImageSelect = (imgName) => {
+    dispatch(toggleImageSelection(imgName));
+  };
 
-  const handleStopCapture = () => {};
+  const handleSelectAll = () => {
+    if (selectedImages.length === imgNames.length) {
+      dispatch(clearImageSelection());
+    } else {
+      dispatch(selectAllImages());
+    }
+  };
+
+  const formatFileName = (name) => {
+    const split = name.split('_');
+    return `Home: ${split[3]}, ${split[4]}`;
+  };
+
+  const handleUseSelectedImages = () => {
+    // Implement what happens when user clicks "Use Selected Images"
+    console.log('Using selected images:', selectedImages);
+    // dispatch(openOnLoadImage(selectedImages)); // Uncomment when ready to implement
+  };
 
   return (
-    <Box style={{ margin: 10, gap: 20 }}>
-      <Box>
-        <h3>Camera Test</h3>
-        <Button onClick={handleTest} variant='contained'>
-          Test All Camera
-        </Button>
-        <Button onClick={() => {}} variant='contained'>
-          Load Url
-        </Button>
-        <Button onClick={onLoadImage} variant='contained'>
-          Load Image
-        </Button>
+    <Box
+      style={{
+        margin: 10,
+        gap: 20,
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        overflow: 'auto',
+      }}
+    >
+      <Box
+        display='flex'
+        justifyContent='space-between'
+        alignItems='center'
+        mb={2}
+        p={1}
+        // bgcolor='#f5f5f5'
+        borderRadius={4}
+      >
+        <div>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={handleLoadImageFromNuc}
+            style={{ marginRight: 8 }}
+          >
+            Load Images
+          </Button>
+          {imgNames.length > 0 && (
+            <Button variant='outlined' onClick={handleSelectAll}>
+              {selectedImages.length === imgNames.length
+                ? 'Deselect All'
+                : 'Select All'}
+            </Button>
+          )}
+        </div>
+
+        {selectedImages.length > 0 && (
+          <div>
+            <Typography
+              variant='body2'
+              style={{ marginRight: 8, display: 'inline-block' }}
+            >
+              {selectedImages.length} selected
+            </Typography>
+            <Button
+              variant='contained'
+              color='secondary'
+              onClick={handleUseSelectedImages}
+            >
+              Use Selected Images
+            </Button>
+          </div>
+        )}
       </Box>
-      <Button onClick={() => handleTest('start_capture')} variant='contained'>
-        Start Capture
-      </Button>
-      <Button onClick={() => handleTest('stop_capture')} variant='contained'>
-        Stop Capture
-      </Button>
+
+      {selectedImages.length === 1 && (
+        <div className='img-info'>
+          <Typography variant='body2' noWrap>
+            Image
+          </Typography>
+        </div>
+      )}
+      <Box className='container'>
+        {imgNames.length > 0 &&
+          imgNames.map((imgName, i) => (
+            <div
+              key={`img-card-${i}`}
+              className={`img-card ${selectedImages.includes(imgName) ? 'selected' : ''}`}
+              onClick={() => handleImageSelect(imgName)}
+            >
+              <img
+                className='img-style'
+                src={`http://127.0.0.1:8000/get_image/${imgName}`}
+                alt={`Image ${i + 1}`}
+              />
+              <div className='img-info'>
+                <Typography variant='body2' noWrap>
+                  {formatFileName(imgName)}
+                </Typography>
+              </div>
+            </div>
+          ))}
+      </Box>
+      {imgNames.length === 0 && (
+        <Box textAlign='center' p={3}>
+          <Typography variant='body1' color='textSecondary'>
+            No images available. Click "Load Images" to fetch from server.
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };
 
 export default connect(
-  // mapStateToProps
   (state) => ({
-    // status: getSetupStageStatuses(state).setupEnvironment,
-    // secondaryText: getEnvironmentDescription(state),
+    imgNames: getImageNames(state),
+    selectedImages: getSelectedImages(state),
   }),
-  // mapDispatchToProps
-  {
-    onLoadImage: openOnLoadImage,
-  }
+  (dispatch) => ({ dispatch })
 )(CameraPanel);

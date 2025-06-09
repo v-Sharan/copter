@@ -6,22 +6,22 @@ import Flight from '@material-ui/icons/Flight';
 import Layers from '@material-ui/icons/Layers';
 import Map from '@material-ui/icons/Map';
 import Place from '@material-ui/icons/Place';
-import {CameraAltRounded} from '@material-ui/icons';
+import { CameraAltRounded } from '@material-ui/icons';
 import Grain from '@material-ui/icons/Grain';
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import {withTranslation} from 'react-i18next';
-import {Module, ModuleTray, Workbench} from 'react-flexible-workbench';
-import {connect} from 'react-redux';
+import { withTranslation } from 'react-i18next';
+import { Module, ModuleTray, Workbench } from 'react-flexible-workbench';
+import { connect } from 'react-redux';
 
-import {areExperimentalFeaturesEnabled} from '~/features/settings/selectors';
+import { areExperimentalFeaturesEnabled } from '~/features/settings/selectors';
 import ShapeLine from '~/icons/ShapeLine';
-import {hasFeature} from '~/utils/configuration';
+import { hasFeature } from '~/utils/configuration';
 
-import {isSidebarOpen} from './selectors';
+import { isSidebarOpen } from './selectors';
 import SwarmIcon from './SwarmIcon';
-import {ClockView} from "@material-ui/pickers";
+import { ClockView } from '@material-ui/pickers';
 
 // NOTE: The scrollbar is not only OS dependent, but also browser dependent.
 const SIDEBAR_OPEN_WIDTH = 180; /* 160px is enough for most platforms, but apparently Windows needs 180px because of the scrollbar */
@@ -51,67 +51,60 @@ const hasShowControl = hasFeature('showControl');
  *
  * @returns  {Object}  the rendered sidebar component
  */
-const Sidebar = ({experimentalFeaturesEnabled, isOpen, t, workbench}) => (
+const Sidebar = ({ experimentalFeaturesEnabled, isOpen, t, workbench }) => (
   <div
     id='sidebar'
-    style={{...style, width: isOpen ? SIDEBAR_OPEN_WIDTH : 48}}
+    style={{ ...style, width: isOpen ? SIDEBAR_OPEN_WIDTH : 48 }}
   >
     <div style={innerStyle}>
       <ModuleTray allowMultipleSelection vertical workbench={workbench}>
-        <Module id='map' icon={<Map/>} label={t('view.map')} component='map'/>
+        <Module id='map' icon={<Map />} label={t('view.map')} component='map' />
         <Module
           id='layers'
-          icon={<Layers/>}
+          icon={<Layers />}
           label={t('view.layer-list')}
           component='layer-list'
         />
         {hasFeature('mapFeatures') && (
           <Module
             id='features'
-            icon={<ShapeLine/>}
+            icon={<ShapeLine />}
             label={t('view.feature-list')}
             component='feature-list'
           />
         )}
         <Module
           id='uavs'
-          icon={<Flight/>}
+          icon={<Flight />}
           label={t('view.uav-list')}
           component='uav-list'
         />
-        <hr/>
+        <hr />
         {/* Do not use a single React fragment here for the next section; it would confuse `react-flexible-workbench` */}
-        {/* <Module
+        <Module
           id='camera'
           icon={<CameraAltRounded />}
           label={t('view.camera')}
           component='camera'
-        /> */}
-        {/*{hasShowControl && (*/}
-        {/*  <Module*/}
-        {/*    id='show'*/}
-        {/*    icon={<Grain />}*/}
-        {/*    label={t('view.show-control')}*/}
-        {/*    component='show-control'*/}
-        {/*  />*/}
-        {/*)}*/}
-        <Module
+        />
+        {/* <Module
           id='spare-drone'
-          icon={<CameraAltRounded/>}
+          icon={<CameraAltRounded />}
           label='Video Panel'
           component='spare'
-        />
+        /> */}
         <Module
           id='locations'
-          icon={<Place/>}
+          icon={<Place />}
           label={t('view.saved-location-list')}
           component='saved-location-list'
         />
-        <Module label={'clock'}
+        {/* <Module
+          label={'clock'}
           component='lcd-clock-panel'
           icon={<Grain />}
-          id="clock"
-        />
+          id='clock'
+        /> */}
         <Module
           id='vtol'
           icon={<SwarmIcon />}
@@ -120,15 +113,15 @@ const Sidebar = ({experimentalFeaturesEnabled, isOpen, t, workbench}) => (
         />
         <Module
           id='swarm'
-          icon={<SwarmIcon/>}
+          icon={<SwarmIcon />}
           label={'Swarm Panel'}
           component='swarm'
         />
         <Module
           id={'AltitudeSetting'}
-          icon={<SwarmIcon/>}
+          icon={<SwarmIcon />}
           component={'AltitudeSetting'}
-          label={"Altitude Settings Panel"}
+          label={'Altitude Settings Panel'}
         />
       </ModuleTray>
     </div>
@@ -136,7 +129,7 @@ const Sidebar = ({experimentalFeaturesEnabled, isOpen, t, workbench}) => (
       <Box
         py={0.5}
         px={1}
-        style={{color: '#fff', opacity: 0.3, width: SIDEBAR_OPEN_WIDTH}}
+        style={{ color: '#fff', opacity: 0.3, width: SIDEBAR_OPEN_WIDTH }}
       >
         <Typography align='center' variant='caption' component='footer'>
           {VERSION}
@@ -158,7 +151,7 @@ Sidebar.propTypes = {
  */
 export default connect(
   // mapStateToProps
-  (state, {workbench}) => ({
+  (state, { workbench }) => ({
     experimentalFeaturesEnabled: areExperimentalFeaturesEnabled(state),
     isOpen: isSidebarOpen(state),
     workbench,

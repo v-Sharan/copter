@@ -24,4 +24,5 @@ export type ServerParameters = {
 export enum ServerSettingsDialogTab {
   AUTO = 'auto',
   MANUAL = 'manual',
+  LOCATION = 'location',
 }

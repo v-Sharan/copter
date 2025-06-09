@@ -274,10 +274,6 @@ LayerSourcePresentation.propTypes = {
  * it to the given image tile.
  */
 function loadTile(imageTile, url) {
-  // const arr = url.split('.jpg')[0].split('/');
-  // const lat = tile2lat(parseInt(arr[7]), parseInt(arr[5]));
-  // const lon = tile2long(parseInt(arr[6]), parseInt(arr[5]));
-  // const { getState } = store;
   imageTile.getImage().src = url;
 }
 

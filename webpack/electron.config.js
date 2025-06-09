@@ -18,7 +18,7 @@ const {
 const htmlWebPackPluginConfiguration = {
   meta: htmlMetaTags,
   template: path.resolve(projectRoot, 'index.html'),
-  title: 'Dhaksha Live',
+  title: 'MIT GCS',
 };
 
 const optimization = {};

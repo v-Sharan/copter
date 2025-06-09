@@ -46,6 +46,8 @@ export type StoredUAV = {
   airspeed?: number;
   gimbalHeading?: number;
   throttle?: number;
+  distance_from_GCS?: number;
+  bearing_from_GCS?: number;
 };
 
 export enum UAVDetailsDialogTab {

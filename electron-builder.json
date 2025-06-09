@@ -1,6 +1,6 @@
 {
   "appId": "com.collmot.skybrush.live",
-  "productName": "Dhaksha Live",
+  "productName": "MIT GCS",
 
   "artifactName": "${productName} ${version}.${ext}",
 

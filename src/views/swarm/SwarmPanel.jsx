@@ -33,8 +33,6 @@ import {
   setMissionFromServer,
 } from '~/features/uavs/details';
 
-console.log(window);
-
 const SwarmPanel = ({
   selectedUAVIds,
   selectedFeatureIds,
@@ -364,7 +362,7 @@ const SwarmPanel = ({
             >
               Open Group
             </Button>
-            Estimated time: {socketData.time} minutes
+            {/* Estimated time: {socketData.time} minutes */}
           </FormControl>
         </Box>
         <Box

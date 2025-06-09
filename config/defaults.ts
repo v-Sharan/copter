@@ -11,7 +11,7 @@ const skybrushIcon =
 const defaults: Config = {
   branding: {
     splashIcon: skybrushIcon,
-    splashTitle: 'Dhaksha Live',
+    splashTitle: 'MIT GCS',
   },
 
   ephemeral: false,

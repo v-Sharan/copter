@@ -44,7 +44,7 @@ const overrides: ConfigOverrides = {
         selector: '#tour-welcome',
         content: (
           <>
-            <b>Welcome to Dhaksha Live!</b>
+            <b>Welcome to MIT GCS!</b>
             <p>
               This online demo allows you to command a simulated fleet of 20
               drones to perform a drone light show, just like you would do it
@@ -61,7 +61,7 @@ const overrides: ConfigOverrides = {
         selector: '#main-map-view',
         content: (
           <>
-            <b>This is the map view of Dhaksha Live.</b>
+            <b>This is the map view of MIT GCS.</b>
             <p>
               Right now it is positioned at Farkashegy Airfield near Budapest,
               Hungary, where we routinely test our drone shows.
@@ -78,9 +78,9 @@ const overrides: ConfigOverrides = {
         selector: '#sidebar',
         content: (
           <>
-            In fact, the entire user interface of Dhaksha Live is based on tabs
-            that you can freely resize and rearrange to build a layout that is
-            the most convenient to you.
+            In fact, the entire user interface of MIT GCS is based on tabs that
+            you can freely resize and rearrange to build a layout that is the
+            most convenient to you.
             <p>
               You can find the modules of the user interface in the sidebar.
               Drag one of the modules to the workspace to add it as a new tab,
@@ -95,7 +95,7 @@ const overrides: ConfigOverrides = {
           <>
             <b>Now, let&apos;s get down to business!</b>
             <p>
-              This button lets you open a drone show in Dhaksha Live (
+              This button lets you open a drone show in MIT GCS (
               <code>.skyc</code>) format from your hard drive.
             </p>
             <p>
@@ -127,7 +127,7 @@ const overrides: ConfigOverrides = {
             <b>Help is always just one click away.</b>
             <p>
               If you get stuck, click on the Help button in the header to open a
-              detailed tutorial about setting up a drone show in Dhaksha Live.
+              detailed tutorial about setting up a drone show in MIT GCS.
             </p>
           </>
         ),

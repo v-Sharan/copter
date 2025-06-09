@@ -277,6 +277,39 @@ const listExtensions = memoize(
 );
 
 /**
+ * Returns the server Location.
+ *
+ * The response is cached for a short period of time (a few seconds).
+ *
+ * @param  {MessageHub}  hub  the message hub used to send the message
+ */
+const serverHasLocation = memoize(
+  async (hub) => {
+    const response = await hub.sendMessage('X-LOC-ISSET');
+    return response.body;
+  },
+  {
+    maxAge: 5000 /* 5 seconds */,
+    promise: true,
+  }
+);
+
+/**
+ * Checks whether the extension with the given name is currently loaded in
+ * the server.
+ *
+ * @param  {MessageHub}  hub  the message hub used to send the message
+ * @param  {string}      name  the name of the extension
+ *
+ * @return {Boolean} whether the extension is loaded
+ */
+export async function isServerHasLocation(hub) {
+  const extensions = await serverHasLocation(hub);
+
+  return extensions.isSetLocation;
+}
+
+/**
  * Checks whether the extension with the given name is currently loaded in
  * the server.
  *
@@ -315,6 +348,7 @@ export class QueryHandler {
     getWeatherInformation,
     isExtensionLoaded,
     listExtensions,
+    isServerHasLocation,
   };
 
   /**

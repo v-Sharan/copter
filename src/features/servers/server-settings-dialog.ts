@@ -12,6 +12,11 @@ import { Protocol, ServerSettingsDialogTab } from './types';
 
 export const isTCPConnectionSupported = Boolean(window.bridge?.createTCPSocket);
 
+type ServerLocation = {
+  lat: number;
+  lon: number;
+};
+
 type ServerSettingsDialogSliceState = ReadonlyDeep<{
   active: boolean;
   protocol: Protocol;
@@ -20,6 +25,8 @@ type ServerSettingsDialogSliceState = ReadonlyDeep<{
   isSecure: boolean;
   dialogVisible: boolean;
   selectedTab: ServerSettingsDialogTab;
+  serverLocation: ServerLocation;
+  isServerHasLocation: boolean;
 }>;
 
 /**
@@ -42,6 +49,11 @@ const initialState: ServerSettingsDialogSliceState = {
   isSecure: false,
   dialogVisible: false,
   selectedTab: ServerSettingsDialogTab.AUTO,
+  isServerHasLocation: false,
+  serverLocation: {
+    lat: 0.0,
+    lon: 0.0,
+  },
 };
 
 /**
@@ -98,6 +110,22 @@ const { reducer, actions } = createSlice({
       action: PayloadAction<Partial<ServerSettingsDialogSliceState>>
     ) {
       Object.assign(state, action.payload);
+    },
+
+    /**
+     * update The Server Has the Location of itself
+     */
+    updateIsServerLocation(state, action: PayloadAction<boolean>) {
+      state.isServerHasLocation = action.payload;
+    },
+
+    /**
+     * update the location of the server
+     */
+    updateServerLocation(state, action: PayloadAction<ServerLocation>) {
+      console.log(action.payload);
+      state.serverLocation = action.payload;
+      state.dialogVisible = false;
     },
   },
 });

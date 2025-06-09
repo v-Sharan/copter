@@ -56,6 +56,8 @@ export default class UAV {
   _airspeed?: number;
   _gimbalHeading?: number;
   _throttle?: number;
+  _distance_from_GCS?: number;
+  _bearing_from_GCS?: number;
 
   /**
    * Constructor.
@@ -73,6 +75,8 @@ export default class UAV {
     this._errors = [];
     this._mostSevereError = 0;
     this._position = undefined;
+    this._distance_from_GCS = 0.0;
+    this._bearing_from_GCS = 0.0;
 
     this.battery = {
       voltage: undefined,
@@ -127,6 +131,20 @@ export default class UAV {
    */
   get amsl(): number | undefined {
     return this._position?.amsl;
+  }
+
+  /**
+   * Returns the distance of UAV from the GCS.
+   */
+  get distance_from_GCS(): number | undefined {
+    return this._distance_from_GCS;
+  }
+
+  /**
+   * Returns the bearing of UAV from the GCS
+   */
+  get bearing_from_GCS(): number | undefined {
+    return this._bearing_from_GCS;
   }
 
   /**
@@ -247,6 +265,8 @@ export default class UAV {
       airspeed,
       gimbalHeading,
       throttle,
+      distance,
+      bearing,
     } = status;
     let errorList: ErrorCode[];
     let updated = false;
@@ -254,6 +274,14 @@ export default class UAV {
     if (timestamp) {
       this.lastUpdated = timestamp;
       updated = true;
+    }
+
+    if (distance) {
+      this._distance_from_GCS = distance;
+    }
+
+    if (bearing) {
+      this._bearing_from_GCS = bearing;
     }
 
     if (position) {
@@ -389,6 +417,8 @@ export default class UAV {
       airspeed: this._airspeed,
       gimbalHeading: this.gimbalHeading,
       throttle: this._throttle,
+      distance_from_GCS: this._distance_from_GCS,
+      bearing_from_GCS: this._bearing_from_GCS,
     };
   }
 }

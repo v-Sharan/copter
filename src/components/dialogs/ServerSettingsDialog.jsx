@@ -13,10 +13,10 @@ import { Form } from 'react-final-form';
 import { connect } from 'react-redux';
 
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -33,15 +33,21 @@ import DialogTabs from '@skybrush/mui-components/lib/DialogTabs';
 import SmallProgressIndicator from '@skybrush/mui-components/lib/SmallProgressIndicator';
 
 import {
-  ServerDetectionManager,
   isServerDetectionSupported,
+  ServerDetectionManager,
 } from '../ServerDetectionManager';
 
-import { forceFormSubmission } from '~/components/forms';
+import { Box } from '@material-ui/core';
+import {
+  forceFormSubmission,
+  LatitudeField,
+  LongitudeField,
+} from '~/components/forms';
 import {
   closeServerSettingsDialog,
   disconnectFromServer,
   setServerSettingsDialogTab,
+  updateServerLocation,
 } from '~/features/servers/actions';
 import {
   getDetectedServersInOrder,
@@ -52,11 +58,14 @@ import {
 import { isTCPConnectionSupported } from '~/features/servers/server-settings-dialog';
 import { Protocol } from '~/features/servers/types';
 import {
-  createValidator,
   between,
+  createValidator,
   integer,
   required,
+  join,
+  finite,
 } from '~/utils/validation';
+import messageHub from '~/message-hub';
 
 const iconForServerItem = ({ hostName, type }) =>
   type === 'inferred' ? (
@@ -161,6 +170,11 @@ const validator = createValidator({
   port: [required, integer, between(1, 65535)],
 });
 
+const validatorLocation = createValidator({
+  lat: join([required, finite, between(-90, 90)]),
+  lon: join([required, finite, between(-180, 180)]),
+});
+
 const ServerSettingsFormPresentation = ({
   initialValues,
   onKeyPress,
@@ -218,6 +232,63 @@ const ServerSettingsForm = connect(
   })
 )(ServerSettingsFormPresentation);
 
+const LocationSettingPresentation = ({
+  initialValues,
+  onKeyPress,
+  onSubmit,
+}) => {
+  return (
+    <Form
+      initialValues={initialValues}
+      validate={validatorLocation}
+      onSubmit={onSubmit}
+    >
+      {({ handleSubmit }) => {
+        return (
+          <form
+            id='locationsetting'
+            onSubmit={handleSubmit}
+            onKeyPress={onKeyPress}
+          >
+            <Box display='flex' flexDirection='row'>
+              <LatitudeField
+                fullWidth
+                margin='dense'
+                name='lat'
+                label='Latitude'
+              />
+              <Box p={0.75} />
+              <LongitudeField
+                fullWidth
+                margin='dense'
+                name='lon'
+                label='Longitude'
+              />
+            </Box>
+          </form>
+        );
+      }}
+    </Form>
+  );
+};
+LocationSettingPresentation.propTypes = {
+  initialValues: PropTypes.object,
+  onKeyPress: PropTypes.func,
+  onSubmit: PropTypes.func,
+};
+
+/**
+ * Container of the form that shows the fields that the user can use to
+ * edit the server settings.
+ */
+const LocationSettingForm = connect(
+  // mapStateToProps
+  (state) => ({
+    initialValues: state.dialogs.serverSettings.serverLocation,
+  }),
+  (dispatch) => ({})
+)(LocationSettingPresentation);
+
 /**
  * Presentation component for the dialog that shows the form that the user
  * can use to edit the server settings.
@@ -225,7 +296,8 @@ const ServerSettingsForm = connect(
 class ServerSettingsDialogPresentation extends React.Component {
   static propTypes = {
     active: PropTypes.bool,
-    forceFormSubmission: PropTypes.func,
+    forceFormSubmissionServer: PropTypes.func,
+    forceFormSubmissionLocation: PropTypes.func,
     hostName: PropTypes.string,
     isConnecting: PropTypes.bool,
     onClose: PropTypes.func,
@@ -234,6 +306,7 @@ class ServerSettingsDialogPresentation extends React.Component {
     onTabSelected: PropTypes.func,
     open: PropTypes.bool.isRequired,
     selectedTab: PropTypes.string,
+    serverLocation: PropTypes.object,
   };
 
   static defaultProps = {
@@ -242,7 +315,13 @@ class ServerSettingsDialogPresentation extends React.Component {
 
   _handleKeyPress = (event) => {
     if (event.nativeEvent.code === 'Enter') {
-      this.props.forceFormSubmission();
+      this.props.forceFormSubmissionServer();
+    }
+  };
+
+  _handleKeyPressLocation = (event) => {
+    if (event.nativeEvent.code === 'Enter') {
+      this.props.forceFormSubmissionLocation();
     }
   };
 
@@ -262,7 +341,9 @@ class ServerSettingsDialogPresentation extends React.Component {
   render() {
     const {
       active,
-      forceFormSubmission,
+      onSubmitLocation,
+      forceFormSubmissionServer,
+      forceFormSubmissionLocation,
       hostName,
       isConnecting,
       onClose,
@@ -272,6 +353,7 @@ class ServerSettingsDialogPresentation extends React.Component {
       open,
       selectedTab,
     } = this.props;
+
     const actions = [];
     const content = [];
 
@@ -291,6 +373,18 @@ class ServerSettingsDialogPresentation extends React.Component {
             onItemSelected={this._handleServerSelection}
           />
         );
+
+        if (manualSetupAllowed) {
+          actions.push(
+            <Button
+              key='disconnect'
+              disabled={!active}
+              onClick={active ? onDisconnect : undefined}
+            >
+              Disconnect
+            </Button>
+          );
+        }
 
         if (manualSetupAllowed) {
           if (!isServerDetectionSupported) {
@@ -324,8 +418,24 @@ class ServerSettingsDialogPresentation extends React.Component {
               />
             </DialogContent>
           );
+          if (manualSetupAllowed) {
+            actions.push(
+              <Button
+                key='disconnect'
+                disabled={!active}
+                onClick={active ? onDisconnect : undefined}
+              >
+                Disconnect
+              </Button>
+            );
+          }
+
           actions.push(
-            <Button key='connect' color='primary' onClick={forceFormSubmission}>
+            <Button
+              key='connect'
+              color='primary'
+              onClick={forceFormSubmissionServer}
+            >
               Connect
             </Button>
           );
@@ -333,20 +443,29 @@ class ServerSettingsDialogPresentation extends React.Component {
 
         break;
 
+      case 'location':
+        content.push(
+          <DialogContent key='contents'>
+            <LocationSettingForm
+              onSubmit={onSubmitLocation}
+              onKeyPress={this._handleKeyPressLocation}
+            />
+          </DialogContent>
+        );
+
+        actions.push(
+          <Button
+            key='Save'
+            color='primary'
+            onClick={forceFormSubmissionLocation}
+            type='submit'
+          >
+            Save
+          </Button>
+        );
+
       default:
         break;
-    }
-
-    if (manualSetupAllowed) {
-      actions.push(
-        <Button
-          key='disconnect'
-          disabled={!active}
-          onClick={active ? onDisconnect : undefined}
-        >
-          Disconnect
-        </Button>
-      );
     }
 
     actions.push(
@@ -365,6 +484,7 @@ class ServerSettingsDialogPresentation extends React.Component {
             }
           />
           {manualSetupAllowed && <Tab value='manual' label='Manual' />}
+          <Tab value='location' label='Location' />
         </DialogTabs>
         <ServerDetectionManager />
         {content}
@@ -389,8 +509,11 @@ const ServerSettingsDialog = connect(
   }),
   // mapDispatchToProps
   (dispatch) => ({
-    forceFormSubmission() {
+    forceFormSubmissionServer() {
       forceFormSubmission('serverSettings');
+    },
+    forceFormSubmissionLocation() {
+      forceFormSubmission('locationsetting');
     },
     onClose() {
       dispatch(closeServerSettingsDialog());
@@ -415,6 +538,15 @@ const ServerSettingsDialog = connect(
         })
       );
     },
+    async onSubmitLocation(data) {
+      const res = await messageHub.sendMessage({
+        type: 'X-LOC-SET',
+        newLoc: data,
+      });
+      console.log(res);
+      dispatch(updateServerLocation(data));
+    },
+
     onTabSelected(event, value) {
       dispatch(setServerSettingsDialogTab(value));
     },

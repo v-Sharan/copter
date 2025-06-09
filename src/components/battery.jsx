@@ -17,7 +17,6 @@ import BatteryCharging80Icon from '@material-ui/icons/BatteryCharging80';
 import BatteryCharging90Icon from '@material-ui/icons/BatteryCharging90';
 import BatteryChargingFullIcon from '@material-ui/icons/BatteryChargingFull';
 import BatteryUnknownIcon from '@material-ui/icons/BatteryUnknown';
-
 import { Status } from '@skybrush/app-theme-material-ui';
 
 import { BatterySettings, BatteryStatus } from '~/model/battery';

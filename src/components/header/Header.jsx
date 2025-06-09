@@ -96,7 +96,7 @@ const Header = ({ isSidebarOpen, showSidebar, toggleSidebar }) => (
           marginBottom: 5,
         }}
       >
-        Dhaksha Live
+        {/* CASR Live */}
       </p>
       {/* <PerspectiveBar /> */}
       <Timer />
