@@ -32,6 +32,14 @@ export type UAVBattery = {
   charging?: boolean;
 };
 
+interface Status extends UAVStatusInfo {
+  airspeed?: number;
+  gimbalHeading?: number;
+  throttle?: number;
+  distance?: number;
+  bearing?: number;
+}
+
 /**
  * Representation of a single UAV.
  */
@@ -250,7 +258,7 @@ export default class UAV {
    * @returns Whether the status information has been updated
    */
   /* eslint-disable complexity */
-  handleUAVStatusInfo = (status: UAVStatusInfo): boolean => {
+  handleUAVStatusInfo = (status: Status): boolean => {
     const {
       timestamp,
       position,

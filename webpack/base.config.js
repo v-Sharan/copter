@@ -84,6 +84,7 @@ module.exports = {
       '.json',
       '.ts',
       '.tsx',
+      '.node',
     ],
     fallback: {
       crypto: require.resolve('crypto-browserify'),
@@ -106,6 +107,10 @@ module.exports = {
       {
         test: /\.css$/,
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+      },
+      {
+        test: /\.node$/,
+        use: 'node-loader',
       },
       {
         test: /\.m?jsx?$/,

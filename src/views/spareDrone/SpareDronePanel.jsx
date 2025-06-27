@@ -1,176 +1,37 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useRef, useEffect } from 'react';
 import {
   MenuItem,
   Select,
   Button,
   FormControl,
   InputLabel,
+  Input,
 } from '@material-ui/core';
 import messageHub from '~/message-hub';
 import store from '~/store';
 import { showNotification } from '~/features/snackbar/actions';
 import { MessageSemantics } from '~/features/snackbar/types';
 import LongPressButton from '~/components/button/LongPressButton';
-const video = [
-  {
-    id: 1,
-    name: 'Camera 1',
-    url: 'http://127.0.0.1:8000/video1',
-    ip: '192.168.6.211',
-  },
-  {
-    id: 2,
-    name: 'Camera 2',
-    url: 'http://127.0.0.1:8000/video2',
-    ip: '192.168.6.212',
-  },
-  {
-    id: 3,
-    name: 'Camera 3',
-    url: 'http://127.0.0.1:8000/video3',
-    ip: '192.168.6.213',
-  },
-  {
-    id: 4,
-    name: 'Camera 4',
-    url: 'http://127.0.0.1:8000/video4',
-    ip: '192.168.6.214',
-  },
-  {
-    id: 5,
-    name: 'Camera 5',
-    url: 'http://127.0.0.1:8000/video5',
-    ip: '192.168.6.215',
-  },
-  {
-    id: 6,
-    name: 'Camera 6',
-    url: 'http://127.0.0.1:8000/video6',
-    ip: '192.168.6.216',
-  },
-  {
-    id: 7,
-    name: 'Camera 7',
-    url: 'http://127.0.0.1:8000/video7',
-    ip: '192.168.6.217',
-  },
-  {
-    id: 8,
-    name: 'Camera 8',
-    url: 'http://127.0.0.1:8000/video8',
-    ip: '192.168.6.218',
-  },
-  {
-    id: 9,
-    name: 'Camera 9',
-    url: 'http://127.0.0.1:8000/video9',
-    ip: '192.168.6.219',
-  },
-  {
-    id: 10,
-    name: 'Camera 10',
-    url: 'http://127.0.0.1:8000/video10',
-    ip: '192.168.6.130',
-  },
-  {
-    id: 11,
-    name: 'All Camera',
-    ip: 'All Camera',
-  },
-];
+
+const isAppsink = Boolean(window.bridge?.getGstPipeline);
 
 const { dispatch } = store;
 
-function getUrlByIp(ip) {
-  const foundObject = video.find((item) => item.ip === ip);
-  return foundObject ? foundObject : {};
-}
-
 const SpareDronePanel = () => {
-  const [camUrl, setCamUrl] = useState(video[0].url);
-  const [allCamera, setAllCamera] = useState(false);
-  const [allCamUrl, setAllCamUrl] = useState([]);
-  const [gimbal, setGimbal] = useState(video[0].ip);
-  const [gimbalControl, setGimbalControl] = useState(video[0].ip);
-  const [tracking, setTracking] = useState(false);
+  const [gimbal, setGimbal] = useState('');
+  const [gimbalControl, setGimbalControl] = useState();
   const [record, setRecording] = useState(false);
+  const imgRef = useRef(null);
 
-  const onCameraChange = async ({ target }) => {
-    const { id, url } = getUrlByIp(target.value);
-    if (id === 11) {
-      setCamUrl('');
-      setAllCamera(true);
-      setAllCamUrl([
-        {
-          id: 1,
-          name: 'Camera 1',
-          url: 'http://127.0.0.1:8000/video1',
-          ip: '192.168.6.211',
-        },
-        {
-          id: 2,
-          name: 'Camera 2',
-          url: 'http://127.0.0.1:8000/video2',
-          ip: '192.168.6.212',
-        },
-        {
-          id: 3,
-          name: 'Camera 3',
-          url: 'http://127.0.0.1:8000/video3',
-          ip: '192.168.6.213',
-        },
-        {
-          id: 4,
-          name: 'Camera 4',
-          url: 'http://127.0.0.1:8000/video4',
-          ip: '192.168.6.214',
-        },
-        {
-          id: 5,
-          name: 'Camera 5',
-          url: 'http://127.0.0.1:8000/video5',
-          ip: '192.168.6.215',
-        },
-        {
-          id: 6,
-          name: 'Camera 6',
-          url: 'http://127.0.0.1:8000/video6',
-          ip: '192.168.6.216',
-        },
-        {
-          id: 7,
-          name: 'Camera 7',
-          url: 'http://127.0.0.1:8000/video7',
-          ip: '192.168.6.217',
-        },
-        {
-          id: 8,
-          name: 'Camera 8',
-          url: 'http://127.0.0.1:8000/video8',
-          ip: '192.168.6.218',
-        },
-        {
-          id: 9,
-          name: 'Camera 9',
-          url: 'http://127.0.0.1:8000/video9',
-          ip: '192.168.6.219',
-        },
-        {
-          id: 10,
-          name: 'Camera 10',
-          url: 'http://127.0.0.1:8000/video10',
-          ip: '192.168.6.210',
-        },
-      ]);
-      setGimbal(target.value);
-      setGimbalControl('192.168.6.211');
-      return;
-    }
-    setAllCamera(false);
-    setCamUrl(url);
-    setGimbalControl(target.value);
-    setGimbal(target.value);
-  };
+  // useEffect(() => {
+  //   (async () => {
+  //     if (isAppsink) {
+  //       await window.bridge?.getGstPipeline();
+  //     }
+  //   })();
+  // }, []);
+
+  const onCameraChange = async ({ target }) => {};
 
   const onButtonPress = async (msg) => {
     // if (allCamera) return;
@@ -178,7 +39,7 @@ const SpareDronePanel = () => {
       const res = await messageHub.sendMessage({
         type: 'X-Camera-MISSION',
         message: msg,
-        ip: gimbalControl,
+        ip: '',
       });
 
       if (!Boolean(res?.body?.message)) {
@@ -200,44 +61,45 @@ const SpareDronePanel = () => {
   };
 
   const handleDoubleClick = async (event) => {
-    if (tracking) {
-      dispatch(
-        showNotification({
-          message: `Tracking is already enabled`,
-          semantics: MessageSemantics.INFO,
-        })
-      );
-      return;
-    }
-    const rect = event.target.getBoundingClientRect();
+    const img = imgRef.current;
+    if (!img) return;
+
+    const rect = img.getBoundingClientRect();
 
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
+    // Calculate center
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    // Custom coordinate system: center is (0,0)
+    const customX = x - centerX; // Right is negative, Left is positive
+    const customY = y - centerY; // Up is negative, Down is positive
 
     try {
       const res = await messageHub.sendMessage({
         type: 'X-Camera-MISSION',
-        x: parseInt(x),
-        y: parseInt(y),
-        ip: gimbal,
         message: 'track',
+        x: customX,
+        y: customY,
+        ip: '192.168.0.119',
       });
-
       if (!Boolean(res?.body?.message)) {
         dispatch(
           showNotification({
-            message: `Tracking Message Failed`,
+            message: `Track Message Failed`,
             semantics: MessageSemantics.ERROR,
           })
         );
       } else {
-        setTracking(true);
-        dispatch(
-          showNotification({
-            message: `Tracking Started`,
-            semantics: MessageSemantics.SUCCESS,
-          })
-        );
+        if (!Boolean(res?.body?.message)) {
+          dispatch(
+            showNotification({
+              message: `Track Message Success`,
+              semantics: MessageSemantics.SUCCESS,
+            })
+          );
+        }
       }
     } catch (e) {
       dispatch(
@@ -247,22 +109,6 @@ const SpareDronePanel = () => {
         })
       );
     }
-  };
-
-  const imageStyle = {
-    width: '250px',
-    height: '250px',
-    objectFit: 'cover',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    margin: '5px',
-  };
-
-  const gridStyle = {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '5px',
-    justifyContent: 'center',
-    padding: '15px',
   };
 
   return (
@@ -276,7 +122,8 @@ const SpareDronePanel = () => {
       >
         <FormControl>
           <InputLabel id='demo-simple-select-label'>Ip</InputLabel>
-          <Select
+          <Input value={gimbal} onChange={() => {}} />
+          {/* <Select
             id='demo-simple-select-label'
             onChange={onCameraChange}
             value={gimbal}
@@ -286,8 +133,17 @@ const SpareDronePanel = () => {
                 {ip}
               </MenuItem>
             ))}
-          </Select>
+          </Select> */}
         </FormControl>
+        <Button
+          onClick={async () => {
+            if (isAppsink) {
+              await window.bridge?.getGstPipeline();
+            }
+          }}
+        >
+          Start Camera
+        </Button>
         <LongPressButton
           onLongPress={onButtonPress.bind(this, 'zoom_in')}
           onLongPressEnd={onButtonPress.bind(this, 'zoom_stop')}
@@ -342,37 +198,21 @@ const SpareDronePanel = () => {
           Stop Recording
         </Button>
       </div>
-      <div style={{ display: 'flex' }}>
-        <div style={gridStyle}>
-          {allCamera ? (
-            allCamUrl.map(({ url, id, ip }) => (
-              <img
-                id={`${id}-${Math.random()}`}
-                style={imageStyle}
-                src={`${url}?random=${Math.random()}`}
-                onClick={() => {
-                  dispatch(
-                    showNotification({
-                      message: ip,
-                      semantics: MessageSemantics.INFO,
-                    })
-                  );
-                  setGimbalControl(ip);
-                }}
-              />
-            ))
-          ) : (
-            <img
-              style={{
-                width: '1180px',
-                height: '620px',
-              }}
-              id={Math.random()}
-              onDoubleClick={handleDoubleClick}
-              src={`${camUrl}?random=${Math.random()}`}
-            />
-          )}
-        </div>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <img
+          ref={imgRef}
+          src='http://localhost:9000/stream'
+          style={{}}
+          // src={require('../../../assets/error.jpg')}
+          alt='RTSP Stream'
+          onDoubleClick={handleDoubleClick}
+        />
       </div>
     </Fragment>
   );

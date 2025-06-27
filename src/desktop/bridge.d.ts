@@ -1,5 +1,6 @@
 export type Bridge = {
   createTCPSocket: unknown;
+  getGstPipeline: unknown;
 };
 
 declare global {

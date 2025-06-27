@@ -5,7 +5,7 @@
   "artifactName": "${productName} ${version}.${ext}",
 
   "directories": {
-    "output": "output",
+    "output": "dist",
     "buildResources": "build"
   },
 

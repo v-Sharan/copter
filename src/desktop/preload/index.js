@@ -102,6 +102,7 @@ contextBridge.exposeInMainWorld('bridge', {
   },
   isElectron: true,
   getApplicationFolder: () => ipc.callMain('getApplicationFolder'),
+  getGstPipeline: () => ipc.callMain('getGstPipeline'),
 
   /**
    * Reads the file with the given name from the disk and returns a Blob object
