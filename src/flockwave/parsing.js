@@ -41,7 +41,7 @@ const MESSAGES_WITH_RECEIPTS = {
   'UAV-RST': true,
   'UAV-RTH': true,
   'UAV-SIGNAL': true,
-  'X-UAV-TAKEOFF': true,
+  'UAV-TAKEOFF': true,
   'UAV-TEST': true,
   'UAV-SLEEP': true,
   'UAV-WAKEUP': true,
@@ -51,7 +51,7 @@ const MESSAGES_WITH_RECEIPTS = {
   'X-UAV-MISSION': true,
   'X-UAV-AUTO': true,
   'X-UAV-QLAND': true,
-  'X-LANDMISSION':true,
+  'X-LANDMISSION': true,
   'X-SETTINGS': true,
 };
 

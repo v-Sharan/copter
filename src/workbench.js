@@ -148,6 +148,7 @@ export const componentRegistry = {
     label: 'Swarm Panel',
     detachable: true,
   },
+
   spare: {
     component: views.SpareDronePanel,
     label: 'Video Panel',

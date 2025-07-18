@@ -44,35 +44,6 @@ const SwarmPanel = ({
   connection,
   onOpen,
 }) => {
-  const handleLandingMission = async () => {
-    const landingMission = landingFeature();
-    let msg = 'Landing Misson and Command';
-    try {
-      const res = await messageHub.sendMessage({
-        type: 'X-UAV-socket',
-        message: 'landingMission',
-        landing: landingMission,
-        ids: selectedUAVIds,
-      });
-
-      if (Boolean(res?.body?.message)) {
-        dispatch(
-          showNotification({
-            message: `${msg} Message sent`,
-            semantics: MessageSemantics.SUCCESS,
-          })
-        );
-      }
-    } catch (e) {
-      dispatch(
-        showNotification({
-          message: `${msg} ${e?.message}`,
-          semantics: MessageSemantics.ERROR,
-        })
-      );
-    }
-  };
-
   const handleSplitMission = async () => {
     const coords = features.filter((item) => item.type === 'points');
     const points = coords.map((coord) => coord.points[0]);
@@ -114,6 +85,26 @@ const SwarmPanel = ({
       );
     } catch (e) {
       dispatch(showError(`Split Mission Message failed to send`));
+    }
+  };
+
+  const camhandleMsg = async (msg) => {
+    try {
+      const res = await messageHub.sendMessage({
+        type: 'X-UAV-socket',
+        message: msg,
+        id: selectedUAVIds,
+      });
+      if (Boolean(res?.body?.message)) {
+        dispatch(
+          showNotification({
+            message: `${msg} Message sent`,
+            semantics: MessageSemantics.SUCCESS,
+          })
+        );
+      }
+    } catch (e) {
+      dispatch(showError(`${msg} Message failed to send`));
     }
   };
 
@@ -283,6 +274,22 @@ const SwarmPanel = ({
           {/*  </DraggableDialog>*/}
           {/*</FormControl>*/}
         </Box>
+
+        <Box style={{ display: 'flex', gap: 5 }}>
+          <Button
+            variant='contained'
+            onClick={camhandleMsg.bind(this, 'start_capture')}
+          >
+            Start Capture
+          </Button>
+          <Button
+            variant='contained'
+            onClick={camhandleMsg.bind(this, 'stop_capture')}
+          >
+            Stop Capture
+          </Button>
+        </Box>
+
         <Box style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
           <FormControl
             fullWidth
@@ -298,7 +305,7 @@ const SwarmPanel = ({
             {/*<Button variant='contained' onClick={async () => await handleMsg('clear_csv')}>*/}
             {/*  Clear CSV*/}
             {/*</Button>*/}
-            <Button variant='contained' onClick={handleLandingMission}>
+            <Button variant='contained' onClick={handleMsg.bind(this, 'home')}>
               Home
             </Button>
           </FormControl>
@@ -317,6 +324,31 @@ const SwarmPanel = ({
               onClick={async () => await handlePoint('goal')}
             >
               Goal Point
+            </Button>
+            <Button
+              variant='contained'
+              onClick={async () => await handleMsg('master')}
+              disabled={selectedUAVIds?.length !== 1}
+            >
+              Master
+            </Button>
+            <Button
+              variant='contained'
+              onClick={async () => await handleMsg('offline')}
+            >
+              Offline
+            </Button>
+            <Button
+              variant='contained'
+              onClick={async () => await handlePoint('land')}
+            >
+              Land
+            </Button>
+            <Button
+              variant='contained'
+              onClick={async () => await handlePoint('disperse')}
+            >
+              Disperse
             </Button>
           </FormControl>
         </Box>
@@ -361,6 +393,13 @@ const SwarmPanel = ({
               // disabled={selectedUAVIds.length === 0}
             >
               Open Group
+            </Button>
+            <Button
+              variant='contained'
+              onClick={() => handlePoint('aggregate')}
+              // disabled={selectedUAVIds.length === 0}
+            >
+              Aggregate
             </Button>
             {/* Estimated time: {socketData.time} minutes */}
           </FormControl>

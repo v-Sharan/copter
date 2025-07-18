@@ -117,6 +117,7 @@ const Sidebar = ({ experimentalFeaturesEnabled, isOpen, t, workbench }) => (
           label={'Swarm Panel'}
           component='swarm'
         />
+
         <Module
           id={'AltitudeSetting'}
           icon={<SwarmIcon />}

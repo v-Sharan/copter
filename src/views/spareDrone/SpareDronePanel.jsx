@@ -17,10 +17,37 @@ const isAppsink = Boolean(window.bridge?.getGstPipeline);
 
 const { dispatch } = store;
 
+const video = [
+  {
+    id: 1,
+    name: 'Camera 1',
+    url: 'http://127.0.0.1:5000/video/1',
+    ip: '192.168.6.121',
+  },
+  {
+    id: 2,
+    name: 'Camera 2',
+    url: 'http://127.0.0.1:5000/video/2',
+    ip: '192.168.6.122',
+  },
+  {
+    id: 3,
+    name: 'Camera 3',
+    url: 'http://127.0.0.1:5000/video/3',
+    ip: '192.168.6.123',
+  },
+];
+
+function getUrlByIp(ip) {
+  const foundObject = video.find((item) => item.ip === ip);
+  return foundObject ? foundObject.url : null;
+}
+
 const SpareDronePanel = () => {
-  const [gimbal, setGimbal] = useState('');
-  const [gimbalControl, setGimbalControl] = useState();
-  const [record, setRecording] = useState(false);
+  const [gimbal, setGimbal] = useState(video[0].ip);
+  const [camUrl, setCamUrl] = useState(video[0].url);
+  // const [gimbalControl, setGimbalControl] = useState();
+  // const [record, setRecording] = useState(false);
   const imgRef = useRef(null);
 
   // useEffect(() => {
@@ -31,7 +58,11 @@ const SpareDronePanel = () => {
   //   })();
   // }, []);
 
-  const onCameraChange = async ({ target }) => {};
+  const onCameraChange = async ({ target }) => {
+    const rtspurl = getUrlByIp(target.value);
+    setCamUrl(rtspurl);
+    setGimbal(target.value);
+  };
 
   const onButtonPress = async (msg) => {
     // if (allCamera) return;
@@ -39,7 +70,7 @@ const SpareDronePanel = () => {
       const res = await messageHub.sendMessage({
         type: 'X-Camera-MISSION',
         message: msg,
-        ip: '',
+        ip: gimbal,
       });
 
       if (!Boolean(res?.body?.message)) {
@@ -111,6 +142,8 @@ const SpareDronePanel = () => {
     }
   };
 
+  console.log('Camera Urllllllll', `${camUrl}?random=${Math.random()}`);
+
   return (
     <Fragment>
       <div
@@ -121,21 +154,21 @@ const SpareDronePanel = () => {
         }}
       >
         <FormControl>
-          <InputLabel id='demo-simple-select-label'>Ip</InputLabel>
-          <Input value={gimbal} onChange={() => {}} />
-          {/* <Select
+          {/* <InputLabel id='demo-simple-select-label'>Ip</InputLabel>
+          <Input value={gimbal} onChange={() => {}} /> */}
+          <Select
             id='demo-simple-select-label'
             onChange={onCameraChange}
             value={gimbal}
           >
             {video.map(({ id, ip, name, url }) => (
-              <MenuItem value={ip} name={url}>
+              <MenuItem value={ip} name={name}>
                 {ip}
               </MenuItem>
             ))}
-          </Select> */}
+          </Select>
         </FormControl>
-        <Button
+        {/* <Button
           onClick={async () => {
             if (isAppsink) {
               await window.bridge?.getGstPipeline();
@@ -143,7 +176,7 @@ const SpareDronePanel = () => {
           }}
         >
           Start Camera
-        </Button>
+        </Button> */}
         <LongPressButton
           onLongPress={onButtonPress.bind(this, 'zoom_in')}
           onLongPressEnd={onButtonPress.bind(this, 'zoom_stop')}
@@ -206,12 +239,19 @@ const SpareDronePanel = () => {
         }}
       >
         <img
-          ref={imgRef}
-          src='http://localhost:9000/stream'
-          style={{}}
+          // ref={imgRef}
+          // src='http://localhost:9000/stream'
+          src={`${camUrl}?random=${Math.random()}`}
+          style={{
+            width: '1280px',
+            height: '720px',
+            objectFit: 'cover',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            margin: '5px',
+          }}
           // src={require('../../../assets/error.jpg')}
           alt='RTSP Stream'
-          onDoubleClick={handleDoubleClick}
+          // onDoubleClick={handleDoubleClick}
         />
       </div>
     </Fragment>

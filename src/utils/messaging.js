@@ -14,8 +14,11 @@ import { MessageSemantics } from '~/features/snackbar/types';
 import messageHub from '~/message-hub';
 import store from '~/store';
 import makeLogger from './logging';
-import {getSelectedFeatureIds, getFeatureById} from '~/features/map-features/selectors';
-import {getSpeed} from "~/features/swarm/selectors";
+import {
+  getSelectedFeatureIds,
+  getFeatureById,
+} from '~/features/map-features/selectors';
+import { getSpeed } from '~/features/swarm/selectors';
 
 const logger = makeLogger('messaging');
 
@@ -161,15 +164,15 @@ const performMassOperation =
         }
       }
       let msg = { type, ids: uavs, ...finalArgs };
-      if (type == 'X-UAV-TAKEOFF') {
+      if (type == 'UAV-TAKEOFF') {
         // const selectedFeatureIds = getSelectedFeatureIds(store.getState())
         // const featureId = selectedFeatureIds[0]
-        const data = getFeatureById(store.getState(),'marker');
+        // const data = getFeatureById(store.getState(),'marker');
         msg = {
           type,
-          coords:[data.points[0][1],data.points[0][0]],
-          alt:getTakeOff(store.getState()),
-          speed: getSpeed(store.getState()),
+          // coords:[data.points[0][1],data.points[0][0]],
+          alt: getTakeOff(store.getState()),
+          // speed: getSpeed(store.getState()),
           ids: uavs,
           ...finalArgs,
         };
@@ -258,7 +261,7 @@ export const flashLightOnUAVsAndHideFailures = performMassOperation({
 });
 
 export const takeoffUAVs = performMassOperation({
-  type: 'X-UAV-TAKEOFF',
+  type: 'UAV-TAKEOFF',
   name: 'Takeoff command',
 });
 
@@ -278,7 +281,7 @@ export const AutoMode = performMassOperation({
 
 export const landUAVs = performMassOperation({
   type: 'UAV-LAND',
-  name: 'Landing command',
+  name: 'Land command',
 });
 
 export const positionHoldUAVs = performMassOperation({

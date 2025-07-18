@@ -6,7 +6,7 @@ const app = express();
 const server = http.createServer(app);
 
 const pipelineString =
-  'rtspsrc location=rtsp://192.168.0.119:554/main latency=0 ! queue ! application/x-rtp ! rtph264depay ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=sink';
+  'rtspsrc location=rtsp://192.168.6.123:554/main latency=0 ! queue ! application/x-rtp ! rtph264depay ! avdec_h264 ! videoconvert ! jpegenc ! appsink name=sink';
 
 const pipeline = new GStreamerPipeline();
 let latestJPEG = null;
