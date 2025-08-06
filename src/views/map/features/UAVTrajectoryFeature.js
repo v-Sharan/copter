@@ -120,6 +120,8 @@ const MissionTrajectory = ({ points, source, color, coords }) => {
     stroke: thinOutline(color),
   });
 
+  // console.log(points);
+
   return points ? (
     <Feature
       id={plannedTrajectoryIdToGlobalId(coords)}

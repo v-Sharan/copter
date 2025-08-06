@@ -230,8 +230,15 @@ const SpareDronePanel = () => {
         >
           Stop Recording
         </Button>
+        <Button
+          onClick={async () => {
+            await window.bridge?.getGstPipeline();
+          }}
+        >
+          Camera gstreamer
+        </Button>
       </div>
-      <div
+      {/* <div
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -253,7 +260,7 @@ const SpareDronePanel = () => {
           alt='RTSP Stream'
           // onDoubleClick={handleDoubleClick}
         />
-      </div>
+      </div> */}
     </Fragment>
   );
 };

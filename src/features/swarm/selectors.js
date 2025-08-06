@@ -28,7 +28,7 @@ export const getCoverage = (state) => state.socket.coverage;
 
 export const getFeatureByPoints = (state) => {
   const feature = getFeaturesInOrder(state);
-  const points = feature.filter((item) => item.type === 'points');
+  const points = feature.filter((item) => item.type === 'points' || 'polygon');
   return points;
 };
 

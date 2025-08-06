@@ -22,7 +22,10 @@ import {
 import { getSelectedUAVIds } from '~/features/uavs/selectors';
 import {
   changeCoverage,
-  changeGridSpacing,
+  changeCamAlt,
+  changeOverlap,
+  changeAntennaBearing,
+  changeZoomLevel,
   openGroupSplitDialog,
   setTime,
 } from '~/features/swarm/slice';
@@ -32,6 +35,7 @@ import {
   DownloadMissionTrue,
   setMissionFromServer,
 } from '~/features/uavs/details';
+import { bearing } from '~/utils/geography';
 
 const SwarmPanel = ({
   selectedUAVIds,
@@ -39,24 +43,35 @@ const SwarmPanel = ({
   getFeatureBySelected,
   dispatch,
   socketData,
+  antennaBearing,
   landingFeature,
   features,
   connection,
   onOpen,
 }) => {
   const handleSplitMission = async () => {
-    const coords = features.filter((item) => item.type === 'points');
-    const points = coords.map((coord) => coord.points[0]);
-    if (coords.length === 0) {
-      showError('There is No Point in the map for Searching Area');
+    // const coords = features.filter((item) => item.type === 'points');
+    // const points = coords.map((coord) => coord.points[0]);
+    // if (coords.length === 0) {
+    //   showError('There is No Point in the map for Searching Area');
+    //   return;
+    // }
+
+    const featuresInMap = selectedFeatureIds.map((i) => {
+      return getFeatureBySelected(i);
+    });
+
+    if (featuresInMap.length == 0) {
+      showError('Select the Polygon or a Point in the Map');
       return;
     }
+
     try {
       const res = await messageHub.sendMessage({
         type: 'X-UAV-socket',
         message: 'groupsplit',
-        coords: points,
         ids: selectedUAVIds,
+        features: featuresInMap,
         ...socketData,
       });
       if (Boolean(res?.body?.message)) {
@@ -128,19 +143,51 @@ const SwarmPanel = ({
     }
   };
 
+  const handleAntennaPoint = async (msg) => {
+    try {
+      const featureId = selectedFeatureIds[0];
+      console.log('selectedFeatureIds', selectedFeatureIds, featureId);
+      const data = getFeatureBySelected(featureId);
+
+      const res = await messageHub.sendMessage({
+        type: 'X-UAV-socket',
+        message: msg,
+        id: selectedUAVIds[0],
+        coords: data.points,
+        ...socketData,
+      });
+      console.log(res);
+
+      if (Boolean(res?.body?.message)) {
+        dispatch(
+          showNotification({
+            message: `${msg} Message sent`,
+            semantics: MessageSemantics.SUCCESS,
+          })
+        );
+        dispatch(changeAntennaBearing({ bearing: parseInt(res?.body?.angle) }));
+      }
+    } catch (e) {
+      dispatch(showError(`${msg} Message failed to send`));
+    }
+  };
+
   const handlePoint = async (message) => {
     if (selectedFeatureIds.length === 0) {
       dispatch(showError(`${message} needs a path or point`));
       return;
     }
     const featureId = selectedFeatureIds[0];
+    console.log('selectedFeatureIds', selectedFeatureIds, featureId);
     const data = getFeatureBySelected(featureId);
     try {
+      console.log('data.points', data);
       const res = await messageHub.sendMessage({
         type: 'X-UAV-socket',
         message,
         ids: selectedUAVIds,
         coords: data.points,
+        // features: featuresInMap,
         ...socketData,
       });
 
@@ -338,12 +385,13 @@ const SwarmPanel = ({
             >
               Offline
             </Button>
-            <Button
-              variant='contained'
-              onClick={async () => await handlePoint('land')}
-            >
-              Land
-            </Button>
+
+            {/* <Button */}
+            {/* variant='contained' */}
+            {/* onClick={async () => await handlePoint('land')} */}
+            {/* > */}
+            {/* Land */}
+            {/* </Button> */}
             <Button
               variant='contained'
               onClick={async () => await handlePoint('disperse')}
@@ -475,17 +523,41 @@ const SwarmPanel = ({
             />
           </FormControl>
           <FormControl variant='standard'>
-            <InputLabel htmlFor='gridSpacing'>
-              Grid Spacing in Meters
-            </InputLabel>
+            <InputLabel htmlFor='camAlt'>Camera Altitude</InputLabel>
             <Input
-              name='gridSpacing'
+              name='camAlt'
               type='number'
               inputMode='numeric'
-              inputProps={{ id: 'gridSpacing' }}
-              value={socketData.gridSpacing}
+              inputProps={{ id: 'camAlt' }}
+              value={socketData.camAlt}
               onChange={({ target: { value, name } }) =>
-                dispatch(changeGridSpacing({ gridSpacing: parseInt(value) }))
+                dispatch(changeCamAlt({ camAlt: parseInt(value) }))
+              }
+            />
+          </FormControl>
+          <FormControl variant='standard'>
+            <InputLabel htmlFor='overlap'>Overlap Percentage</InputLabel>
+            <Input
+              name='overlap'
+              type='number'
+              inputMode='numeric'
+              inputProps={{ id: 'overlap' }}
+              value={socketData.overlap}
+              onChange={({ target: { value, name } }) =>
+                dispatch(changeOverlap({ overlap: parseInt(value) }))
+              }
+            />
+          </FormControl>
+          <FormControl variant='standard'>
+            <InputLabel htmlFor='zoomLevel'>Zoom Level of camera</InputLabel>
+            <Input
+              name='zoomLevel'
+              type='number'
+              inputMode='numeric'
+              inputProps={{ id: 'zoomLevel' }}
+              value={socketData.zoomLevel}
+              onChange={({ target: { value, name } }) =>
+                dispatch(changeZoomLevel({ zoomLevel: parseInt(value) }))
               }
             />
           </FormControl>
@@ -498,6 +570,7 @@ const SwarmPanel = ({
           >
             Search
           </Button>
+
           <Button
             variant='contained'
             onClick={handleSplitMission}
@@ -522,6 +595,13 @@ const SwarmPanel = ({
           >
             show Trajectory
           </Button>
+          <Button
+            variant='contained'
+            onClick={async () => await handleAntennaPoint('antenna_az')}
+          >
+            Antenna AZ
+          </Button>
+          <p>{antennaBearing.antBear} deg</p>
         </FormControl>
       </FormGroup>
     </Box>
@@ -532,6 +612,7 @@ SwarmPanel.propTypes = {
   selectedUAVIds: PropTypes.arrayOf(PropTypes.string),
   selectedFeatureIds: PropTypes.arrayOf(PropTypes.string),
   getFeatureBySelected: PropTypes.func,
+  antennaBearing: PropTypes.string,
   socketData: PropTypes.object,
   landingFeature: PropTypes.func,
 };
@@ -551,6 +632,9 @@ export default connect(
     },
     socketData: {
       ...state.socket,
+    },
+    antennaBearing: {
+      antBear: state.socket.antennaBearing,
     },
     connection: getCurrentServerState(state).state,
   }),

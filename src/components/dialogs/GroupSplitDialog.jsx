@@ -21,6 +21,7 @@ import {
   closeGroupSplitingDialog,
   addGroup,
   changeSelectedTab,
+  socketData,
   resetGroup,
   setTime,
 } from '~/features/swarm/slice';
@@ -58,6 +59,9 @@ const MultipleSelectChip = ({
   deleteAllGroup,
   gridSpacing,
   coverage,
+  camAlt,
+  zoomLevel,
+  overlap,
   featurePoints,
   dispatch,
 }) => {
@@ -135,7 +139,9 @@ const MultipleSelectChip = ({
         message: 'spificsplit',
         groups: getState().socket.group,
         coverage: coverage,
-        gridSpacing: gridSpacing,
+        camAlt: camAlt,
+        zoomLevel: zoomLevel,
+        overlap: overlap,
       });
       if (Boolean(res?.body?.message)) {
         showMsg('split Mission Message sent');
@@ -306,6 +312,10 @@ const GroupSplitDialog = connect(
     selectedTab: state.socket.selectedTab,
     coverage: state.socket.coverage,
     gridSpacing: state.socket.gridSpacing,
+    camAlt: state.socket.camAlt,
+    zoomLevel: state.socket.zoomLevel,
+    overlap: state.socket.overlap,
+
     featurePoints: (featureId) => {
       const feature = getFeatureById(state, featureId);
       return [feature.points[0][1], feature.points[0][0]];

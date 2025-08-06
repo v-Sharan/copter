@@ -6,13 +6,17 @@ type Group = {
 };
 interface SwarmSlice {
   coverage: number;
+  camAlt: number;
   gridSpacing: number;
+  overlap: number;
+  zoomLevel: number;
   Direction: string;
   skip_waypoint: number;
   radius: number;
   speed: number;
   groupsplitDialog: boolean;
   numOfGroups: number;
+  antennaBearing: number;
   group: Group;
   selectedTab: 'Create' | 'Delete' | 'View Groups';
   time: number;
@@ -21,7 +25,11 @@ interface SwarmSlice {
 
 const initialState: SwarmSlice = {
   coverage: 500,
+  camAlt: 100,
   gridSpacing: 50,
+  overlap: 10,
+  zoomLevel: 1,
+  antennaBearing: 0,
   Direction: 'ClockWise Direction',
   skip_waypoint: 0,
   radius: 0,
@@ -38,11 +46,21 @@ const { actions, reducer } = createSlice({
   name: 'socketswarm',
   initialState,
   reducers: {
+    changeAntennaBearing(state, action: PayloadAction<{ bearing: number }>) {
+      state.antennaBearing = action.payload.bearing;
+    },
+
     changeCoverage(state, action: PayloadAction<{ coverage: number }>) {
       state.coverage = action.payload.coverage;
     },
-    changeGridSpacing(state, action: PayloadAction<{ gridSpacing: number }>) {
-      state.gridSpacing = action.payload.gridSpacing;
+    changeCamAlt(state, action: PayloadAction<{ camAlt: number }>) {
+      state.camAlt = action.payload.camAlt;
+    },
+    changeOverlap(state, action: PayloadAction<{ overlap: number }>) {
+      state.overlap = action.payload.overlap;
+    },
+    changeZoomLevel(state, action: PayloadAction<{ zoomLevel: number }>) {
+      state.zoomLevel = action.payload.zoomLevel;
     },
     changeDirection(state, action: PayloadAction<{ direction: string }>) {
       state.Direction = action.payload.direction;
@@ -92,8 +110,11 @@ const { actions, reducer } = createSlice({
 export const {
   changeWayPoint,
   changeDirection,
+  changeAntennaBearing,
   changeCoverage,
-  changeGridSpacing,
+  changeCamAlt,
+  changeOverlap,
+  changeZoomLevel,
   changeRadius,
   changeSpeed,
   openGroupSplitDialog,

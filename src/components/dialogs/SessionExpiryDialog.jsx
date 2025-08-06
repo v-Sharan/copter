@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 
 const SessionExpiryDialog = ({ onClose, open }) => (
   <Dialog open={open}>
-    <DialogTitle>Session expired</DialogTitle>
+    <DialogTitle> Session expired</DialogTitle>
     <DialogContent>
       <DialogContentText>
         Your demo session has expired. Thank you for evaluating MIT GCS!

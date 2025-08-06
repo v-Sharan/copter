@@ -505,8 +505,8 @@ const MissionInfoVectorSource = ({
         })
       );
     }
-    for (let coord in missionArray) {
 
+    for (let coord in missionArray) {
       features.push(
         <MissionDownload
           coords={coord}

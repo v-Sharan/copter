@@ -159,7 +159,7 @@ const UAVOperationsButtonGroup = ({
           <FlightLand fontSize={fontSize} />
         </IconButton>
       </Tooltip>
-      <Tooltip content={'QLoiter Mode'}>
+      <Tooltip content={'Position Hold Mode'}>
         <IconButton
           disabled={isSelectionEmpty}
           size={iconSize}

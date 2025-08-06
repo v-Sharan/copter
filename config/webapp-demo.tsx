@@ -44,7 +44,7 @@ const overrides: ConfigOverrides = {
         selector: '#tour-welcome',
         content: (
           <>
-            <b>Welcome to MIT GCS!</b>
+            <b>Welcome to !</b>
             <p>
               This online demo allows you to command a simulated fleet of 20
               drones to perform a drone light show, just like you would do it
@@ -95,8 +95,8 @@ const overrides: ConfigOverrides = {
           <>
             <b>Now, let&apos;s get down to business!</b>
             <p>
-              This button lets you open a drone show in MIT GCS (
-              <code>.skyc</code>) format from your hard drive.
+              This button lets you open a drone show MIT GCS (<code>.skyc</code>
+              ) format from your hard drive.
             </p>
             <p>
               If you do not have a compiled drone show file yet, you can use the

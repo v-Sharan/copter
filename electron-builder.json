@@ -1,6 +1,6 @@
 {
   "appId": "com.collmot.skybrush.live",
-  "productName": "MIT GCS",
+  "productName": "",
 
   "artifactName": "${productName} ${version}.${ext}",
 

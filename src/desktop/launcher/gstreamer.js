@@ -37,7 +37,7 @@ app.get('/stream', (req, res) => {
     }
   };
 
-  const interval = setInterval(sendFrame, 1000 / 15); // 15 FPS
+  const interval = setInterval(sendFrame, 1000 / 15);
 
   req.on('close', () => {
     clearInterval(interval);
