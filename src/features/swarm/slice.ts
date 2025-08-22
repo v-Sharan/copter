@@ -16,7 +16,13 @@ interface SwarmSlice {
   speed: number;
   groupsplitDialog: boolean;
   numOfGroups: number;
+  cameraYaw: number;
+  cameraLattitude: number;
+  cameraLongitiude: number;
   antennaBearing: number;
+  cameraTargetLattitude: number;
+  cameraTargetLongititude: number;
+  selectedCameraip: string;
   group: Group;
   selectedTab: 'Create' | 'Delete' | 'View Groups';
   time: number;
@@ -30,7 +36,13 @@ const initialState: SwarmSlice = {
   overlap: 10,
   zoomLevel: 1,
   antennaBearing: 0,
+  cameraYaw: 0,
+  selectedCameraip: '0:0:0:0',
   Direction: 'ClockWise Direction',
+  cameraLattitude: 0.0,
+  cameraLongitiude: 0.0,
+  cameraTargetLattitude: 13.0505301,
+  cameraTargetLongititude: 80.2120814,
   skip_waypoint: 0,
   radius: 0,
   speed: 18,
@@ -46,6 +58,29 @@ const { actions, reducer } = createSlice({
   name: 'socketswarm',
   initialState,
   reducers: {
+    updateCameraYaw(state, action: PayloadAction<{ yaw: number }>) {
+      state.cameraYaw = action.payload.yaw;
+    },
+    changeCameraLocation(
+      state,
+      action: PayloadAction<{ lat: number; lon: number }>
+    ) {
+      state.cameraLattitude = action.payload.lat;
+      state.cameraLongitiude = action.payload.lon;
+    },
+    changeCameraTargetLocation(
+      state,
+      action: PayloadAction<{ lat: number; lon: number }>
+    ) {
+      state.cameraTargetLattitude = action.payload.lat;
+      state.cameraTargetLongititude = action.payload.lon;
+    },
+    changeSelectedCameraIp(
+      state,
+      action: PayloadAction<{ selectedCameraIp: string }>
+    ) {
+      state.selectedCameraip = action.payload.selectedCameraIp;
+    },
     changeAntennaBearing(state, action: PayloadAction<{ bearing: number }>) {
       state.antennaBearing = action.payload.bearing;
     },
@@ -110,7 +145,11 @@ const { actions, reducer } = createSlice({
 export const {
   changeWayPoint,
   changeDirection,
+  changeCameraTargetLocation,
+  changeSelectedCameraIp,
   changeAntennaBearing,
+  changeCameraLocation,
+  updateCameraYaw,
   changeCoverage,
   changeCamAlt,
   changeOverlap,

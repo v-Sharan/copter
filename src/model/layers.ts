@@ -19,6 +19,7 @@ import Map from '@material-ui/icons/Map';
 import MyLocation from '@material-ui/icons/MyLocation';
 import Timeline from '@material-ui/icons/Timeline';
 import TrackChanges from '@material-ui/icons/TrackChanges';
+import CameraAlt from '@material-ui/icons/CameraAlt';
 
 import type BaseLayer from 'ol/layer/Base';
 import type OLLayer from 'ol/layer/Layer';
@@ -39,6 +40,7 @@ export enum LayerType {
   HEATMAP = 'heatmap',
   HEXGRID = 'hexgrid',
   IMAGE = 'image',
+  CAMERA = 'camera',
 
   // TODO: Left for backwards compatibility, rename at the next major version!
   MISSION_INFO = 'home',
@@ -76,6 +78,7 @@ export const LayerTypes = [
   LayerType.OWN_LOCATION,
   LayerType.GEOJSON,
   LayerType.HEATMAP,
+  LayerType.CAMERA,
 ] as const;
 
 export const ProLayerTypes = [LayerType.IMAGE] as const;
@@ -249,6 +252,10 @@ const propertiesForLayerTypes: Record<
   [LayerType.UNTYPED]: {
     label: 'Untyped layer',
     icon: HelpOutline,
+  },
+  [LayerType.CAMERA]: {
+    label: 'Camera',
+    icon: CameraAlt,
   },
 } as const;
 

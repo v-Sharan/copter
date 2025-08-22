@@ -19,7 +19,7 @@ import {
   handleConnectionInformationMessage,
 } from './model/connections';
 import { handleObjectDeletionMessage } from './model/objects';
-import { handleIncomeTargetCNF } from './model/target';
+import { handleIncomeCameraInfo, handleIncomeTargetCNF } from './model/target';
 
 import { addInboundMessage } from './features/messages/slice';
 import { showError, showNotification } from './features/snackbar/actions';
@@ -92,6 +92,8 @@ messageHub.registerNotificationHandlers({
     handleDebugRequest(message.body, messageHub.execute.sendDebugMessage),
   'X-TARGET-CNF': (message) =>
     handleIncomeTargetCNF(message.body.coords, dispatch),
+  'X-CAMERA-LOOP': (message) => handleIncomeCameraInfo(message.boady, dispatch),
+
   // dispatch(
   //   showNotification({
   //     message: message.body.coords.lat,

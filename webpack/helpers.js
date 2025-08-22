@@ -9,7 +9,7 @@ const useHotModuleReloading = isDevelopment && process.env.DEPLOYMENT !== '1';
 
 const htmlMetaTags = {
   charset: 'utf-8',
-  description: 'MIT GCS: The Next-generation Drone Software Suite',
+  description: 'XAG Swarm GCS: The Next-generation Drone Software Suite',
   viewport:
     'initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no',
 

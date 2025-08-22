@@ -87,14 +87,14 @@ const StatusSummaryMiniTable = ({
 
     rows.push(
       ['GPS fix', gpsFixLabel],
+
       ['GPS acc', gpsAcc],
       'sep1',
       ['Lat', formatNumberSafely(lat, 7, '°', naText)],
       ['Lon', formatNumberSafely(lon, 7, '°', naText)],
       ['AMSL', formatNumberSafely(amsl, 2, ' m', naText)],
       ['AHL', formatNumberSafely(ahl, 2, ' m', naText)],
-      ['AGL', formatNumberSafely(agl, 2, ' m', naText)],
-      'sep2'
+      ['AGL', formatNumberSafely(agl, 2, ' m', naText)]
     );
   }
 

@@ -18,7 +18,7 @@ import DroneImageError from '~/../assets/img/drone-x-black-error-32x32.png';
 // import RvtImageIcon from '~/../assets/img/rvt.png';
 import SelectionGlow from '~/../assets/img/GlowPlane.png';
 import { Severity } from '~/model/enums';
-// import GimbalPolygon from '~/../assets/img/up1.png';
+import GimbalPolygon from '~/../assets/img/up1.png';
 
 const droneImages = {
   [Severity.INFO]: DroneImageInfo,
@@ -205,18 +205,18 @@ export default class UAVFeature extends Feature {
     });
     this._iconImage = iconImage;
 
-    // const gimbalIconImage = new Icon({
-    //   src: GimbalPolygon,
-    //   rotateWithView: true,
-    //   rotation: this._gimbalHeadingToRotation(),
-    //   snapToPixel: false,
-    // });
-    // this._gimbalIcon = gimbalIconImage;
+    const gimbalIconImage = new Icon({
+      src: GimbalPolygon,
+      rotateWithView: true,
+      rotation: this._gimbalHeadingToRotation(),
+      snapToPixel: false,
+    });
+    this._gimbalIcon = gimbalIconImage;
 
     const iconStyle = new Style({ image: iconImage });
-    // const gimbalIconStyle = new Style({ image: gimbalIconImage });
+    const gimbalIconStyle = new Style({ image: gimbalIconImage });
     styles.push(iconStyle);
-    // styles.push(gimbalIconStyle);
+    styles.push(gimbalIconStyle);
 
     // Selection image
 

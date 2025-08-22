@@ -143,34 +143,34 @@ const SwarmPanel = ({
     }
   };
 
-  const handleAntennaPoint = async (msg) => {
-    try {
-      const featureId = selectedFeatureIds[0];
-      console.log('selectedFeatureIds', selectedFeatureIds, featureId);
-      const data = getFeatureBySelected(featureId);
+  // const handleAntennaPoint = async (msg) => {
+  //   try {
+  //     const featureId = selectedFeatureIds[0];
+  //     console.log('selectedFeatureIds', selectedFeatureIds, featureId);
+  //     const data = getFeatureBySelected(featureId);
 
-      const res = await messageHub.sendMessage({
-        type: 'X-UAV-socket',
-        message: msg,
-        id: selectedUAVIds[0],
-        coords: data.points,
-        ...socketData,
-      });
-      console.log(res);
+  //     const res = await messageHub.sendMessage({
+  //       type: 'X-UAV-socket',
+  //       message: msg,
+  //       id: selectedUAVIds[0],
+  //       coords: data.points,
+  //       ...socketData,
+  //     });
+  //     console.log(res);
 
-      if (Boolean(res?.body?.message)) {
-        dispatch(
-          showNotification({
-            message: `${msg} Message sent`,
-            semantics: MessageSemantics.SUCCESS,
-          })
-        );
-        dispatch(changeAntennaBearing({ bearing: parseInt(res?.body?.angle) }));
-      }
-    } catch (e) {
-      dispatch(showError(`${msg} Message failed to send`));
-    }
-  };
+  //     if (Boolean(res?.body?.message)) {
+  //       dispatch(
+  //         showNotification({
+  //           message: `${msg} Message sent`,
+  //           semantics: MessageSemantics.SUCCESS,
+  //         })
+  //       );
+  //       dispatch(changeAntennaBearing({ bearing: parseInt(res?.body?.angle) }));
+  //     }
+  //   } catch (e) {
+  //     dispatch(showError(`${msg} Message failed to send`));
+  //   }
+  // };
 
   const handlePoint = async (message) => {
     if (selectedFeatureIds.length === 0) {
@@ -595,13 +595,13 @@ const SwarmPanel = ({
           >
             show Trajectory
           </Button>
-          <Button
+          {/* <Button
             variant='contained'
             onClick={async () => await handleAntennaPoint('antenna_az')}
           >
             Antenna AZ
           </Button>
-          <p>{antennaBearing.antBear} deg</p>
+          <p>{antennaBearing.antBear} deg</p> */}
         </FormControl>
       </FormGroup>
     </Box>

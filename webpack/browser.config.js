@@ -28,7 +28,7 @@ const plugins = [
     favicon: path.resolve(projectRoot, 'assets', 'icons', 'favicon.ico'),
     meta: htmlMetaTags,
     template: path.resolve(projectRoot, 'index.html'),
-    title: 'MIT GCS | The Next-generation Drone Software Suite',
+    title: 'XAG Swarm GCS | The Next-generation Drone Software Suite',
   }),
 ];
 

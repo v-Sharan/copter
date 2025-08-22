@@ -16,6 +16,7 @@ import { TileServerLayerSettings, TileServerLayer } from './tileserver';
 import { UAVsLayerSettings, UAVsLayer } from './uavs';
 import { UAVTraceLayerSettings, UAVTraceLayer } from './uavtrace';
 import { UntypedLayerSettings, UntypedLayer } from './untyped';
+import { CameraLayerSettings, CameraLayer } from './camera';
 
 import { LayerType } from '~/model/layers';
 
@@ -41,6 +42,7 @@ export const LayerSettings = {
   [LayerType.UAV_TRACE]: UAVTraceLayerSettings,
   [LayerType.UNAVAILABLE]: UnavailableLayerSettings,
   [LayerType.UNTYPED]: UntypedLayerSettings,
+  [LayerType.CAMERA]: CameraLayerSettings,
 };
 
 export const stateObjectToLayerSettings = (layer, layerId) => {
@@ -77,6 +79,7 @@ export const Layers = {
   [LayerType.UAVS]: UAVsLayer,
   [LayerType.UAV_TRACE]: UAVTraceLayer,
   [LayerType.UNTYPED]: UntypedLayer,
+  [LayerType.CAMERA]: CameraLayer,
 };
 
 export const stateObjectToLayer = (layer, props) => {

@@ -32,9 +32,10 @@ const initialState: MapLayersSliceState = {
     features: createNewLayer('features', LayerType.FEATURES, 'Features'),
     home: createNewLayer('home', LayerType.MISSION_INFO, 'Mission info'),
     uavs: createNewLayer('uavs', LayerType.UAVS, 'UAVs'),
+    camera: createNewLayer('camera', LayerType.CAMERA, 'camera'),
   },
   // .order contains the order of the layers, from bottom to top
-  order: ['base', 'graticule', 'beacons', 'features', 'home', 'uavs'],
+  order: ['base', 'camera', 'graticule', 'beacons', 'features', 'home', 'uavs'],
 };
 
 /**

@@ -117,9 +117,11 @@ export default class Flock {
 
     const { addedUAVs, updatedUAVs } = transform(
       body.status,
+
       (accumulator, status, uavId) => {
         // Code duplicated from getOrCreateUAVById(); this is unfortunate
         // but we need to know whether we have added a UAV or not
+
         let uav = this.getUAVById(uavId);
         if (!uav) {
           uav = this._createUAVById(uavId);

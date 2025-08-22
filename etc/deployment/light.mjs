@@ -1,6 +1,6 @@
 export default {
   electronBuilder: {
     appId: 'com.collmot.skybrush.live-light',
-    productName: 'MIT GCS Light',
+    productName: 'XAG Swarm GCS Light',
   },
 };

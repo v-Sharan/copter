@@ -1,6 +1,6 @@
 {
   "name": "@skybrush/live",
-  "productName": "MIT GCS",
+  "productName": "XAG Swarm GCS",
   "version": "2.8.1",
   "description": "Web frontend for a Skybrush server",
   "main": "launcher.bundle.js",
