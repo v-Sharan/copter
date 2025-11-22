@@ -83,8 +83,8 @@ export default class UAV {
     this._errors = [];
     this._mostSevereError = 0;
     this._position = undefined;
-    this._distance_from_GCS = 0.01;
-    this._bearing_from_GCS = 0.01;
+    this._distance_from_GCS = 0.0;
+    this._bearing_from_GCS = 0.0;
 
     this.battery = {
       voltage: undefined,
@@ -286,6 +286,7 @@ export default class UAV {
 
     if (distance) {
       this._distance_from_GCS = distance;
+      console.log(this._distance_from_GCS);
     }
 
     if (bearing) {

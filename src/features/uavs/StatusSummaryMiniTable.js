@@ -1,9 +1,14 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import TimeAgo from 'react-timeago';
 
 import StatusText from '@skybrush/mui-components/lib/StatusText';
+import {
+  getSelectedFeatureIds,
+  getFeatureById,
+  getFeaturesInOrder,
+} from '~/features/map-features/selectors';
 
 import MiniTable from '~/components/MiniTable';
 import {
@@ -15,6 +20,8 @@ import {
 import { formatNumberSafely, shortTimeAgoFormatter } from '~/utils/formatting';
 
 import { getUAVById } from './selectors';
+import { showError } from '../snackbar/actions';
+import messageHub from '~/message-hub';
 
 // TODO: Use the internal `naText` of `MiniTable` instead
 const naText = <span className='muted'>—</span>;
@@ -29,7 +36,29 @@ const StatusSummaryMiniTable = ({
   distance_from_GCS,
   bearing_from_GCS,
   dispatch,
+  uav_id,
 }) => {
+  const [distance_from_GCS_meter, setDistanceFromGCS] = useState(1.01);
+  const [bearing_from_GCS_meter, setBearingFromGCS] = useState(1.01);
+  const homeDistance = async (msg) => {
+    try {
+      const res = await messageHub.sendMessage({
+        type: 'X-UAV-socket',
+        message: msg,
+        id: uav_id,
+      });
+      console.log(res.body.home_dist);
+      setDistanceFromGCS(res.body.home_dist[0]);
+      setBearingFromGCS(res.body.home_dist[1]);
+    } catch (e) {
+      dispatch(showError(`${e} Message failed to send`));
+    }
+  };
+
+  useEffect(() => {
+    homeDistance('home_distance');
+  });
+
   const { lat, lon, amsl, ahl, agl } = position || {};
   const hasLocalPosition = localPosition && Array.isArray(localPosition);
 
@@ -106,17 +135,17 @@ const StatusSummaryMiniTable = ({
     );
   }
 
-  if (distance_from_GCS) {
+  if (distance_from_GCS_meter) {
     rows.push([
       'Distance From GCS',
-      formatNumberSafely(distance_from_GCS, 2, 'm', naText),
+      formatNumberSafely(distance_from_GCS_meter, 2, 'm', naText),
     ]);
   }
 
-  if (bearing_from_GCS) {
+  if (bearing_from_GCS_meter) {
     rows.push([
       'Bearing From GCS',
-      formatNumberSafely(bearing_from_GCS, 2, 'm', naText),
+      formatNumberSafely(bearing_from_GCS_meter, 2, '°', naText),
     ]);
   }
   rows.push(['Heading', formatNumberSafely(heading, 1, '°', naText)], 'sep3', [
@@ -142,6 +171,9 @@ StatusSummaryMiniTable.propTypes = {
   lastUpdated: PropTypes.number,
   localPosition: PropTypes.arrayOf(PropTypes.number),
   mode: PropTypes.string,
+  distance_from_GCS: PropTypes.number,
+  bearing_from_GCS: PropTypes.number,
+
   position: PropTypes.shape({
     lat: PropTypes.number,
     lon: PropTypes.number,
@@ -151,10 +183,29 @@ StatusSummaryMiniTable.propTypes = {
   }),
 };
 
-export default connect(
-  // mapStateToProps
-  (state, ownProps) => getUAVById(state, ownProps.uavId),
+// export default connect(
+//   // mapStateToProps
+//   (state, ownProps) => ({
+//     uav: getUAVById(state, ownProps.uavId),
+//     uav_id: ownProps,
+//   }),
+//   // (state) => ({
+//   //   selectedFeatureIds: getSelectedFeatureIds(state),
+//   // }),
 
-  // mapDispatchToProps
+//   // console.log(state)
+
+//   // mapDispatchToProps
+//   (dispatch) => ({ dispatch })
+// )(StatusSummaryMiniTable);
+export default connect(
+  (state, ownProps) => {
+    const uav = getUAVById(state, ownProps.uavId);
+
+    return {
+      ...uav, // spread all uav props
+      uav_id: ownProps.uavId,
+    };
+  },
   (dispatch) => ({ dispatch })
 )(StatusSummaryMiniTable);
