@@ -246,6 +246,8 @@ const SwarmPanel = ({
             semantics: MessageSemantics.SUCCESS,
           })
         );
+      } else {
+        dispatch(showError(`${message} failed to send - out of boundary`));
       }
 
       if (message == 'search' || message == 'navigate') {
