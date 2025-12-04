@@ -4,7 +4,7 @@ const getApplicationFolder = require('./app-folder');
 const { readBufferFromFile, writeBufferToFile } = require('./filesystem');
 const localServer = require('./local-server');
 const powerSaving = require('./power-saving');
-const createPipeline = require('./gstreamer');
+// const createPipeline = require('./gstreamer');
 
 module.exports = () => {
   ipc.answerRenderer('getApplicationFolder', getApplicationFolder);
@@ -18,5 +18,5 @@ module.exports = () => {
     'powerSaving.setSleepModePrevented',
     powerSaving.setSleepModePrevented
   );
-  ipc.answerRenderer('getGstPipeline', createPipeline);
+  // ipc.answerRenderer('getGstPipeline', createPipeline);
 };

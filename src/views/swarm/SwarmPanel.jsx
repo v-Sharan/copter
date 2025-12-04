@@ -444,7 +444,7 @@ const SwarmPanel = ({
             {/* </Button> */}
             <Button
               variant='contained'
-              onClick={async () => await handlePoint('disperse')}
+              onClick={async () => await handleMsg('disperse')}
             >
               Disperse
             </Button>
