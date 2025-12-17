@@ -52,7 +52,8 @@ import {
 } from '~/features/mission/slice';
 import {
   getGeofencePolygonId,
-  getInitialMissionId, getLandingMissionId,
+  getInitialMissionId,
+  getLandingMissionId,
 } from '~/features/mission/selectors';
 import { updateOutdoorShowSettings } from '~/features/show/actions';
 import { openUAVDetailsDialog } from '~/features/uavs/details';
@@ -261,34 +262,34 @@ class MapContextMenu extends React.Component {
             );
           }
 
-          if (hasSingleSelectedFeature) {
-            const geofenceCompatibleFeatureTypes = [
-              /* 'circle', */
-              'lineString',
-              'polygon',
-            ];
+          // if (hasSingleSelectedFeature) {
+          //   const geofenceCompatibleFeatureTypes = [
+          //     /* 'circle', */
+          //     'lineString',
+          //     'polygon',
+          //   ];
 
-            const featureSuitableForGeofence =
-              geofenceCompatibleFeatureTypes.includes(selectedFeatureTypes[0]);
-            const isCurrentGeofence =
-              selectedFeatureIds[0] === geofencePolygonId;
-            result.push(
-              <Divider key='div5' />,
-              <MenuItem
-                key='geofence'
-                dense
-                disabled={!featureSuitableForGeofence}
-                onClick={
-                  isCurrentGeofence
-                    ? this._unsetSelectedFeatureAsGeofence
-                    : this._setSelectedFeatureAsGeofence
-                }
-              >
-                <ListItemIcon>{null}</ListItemIcon>
-                {isCurrentGeofence ? 'Clear geofence' : 'Use as geofence'}
-              </MenuItem>
-            );
-          }
+          //   const featureSuitableForGeofence =
+          //     geofenceCompatibleFeatureTypes.includes(selectedFeatureTypes[0]);
+          //   const isCurrentGeofence =
+          //     selectedFeatureIds[0] === geofencePolygonId;
+          //   result.push(
+          //     <Divider key='div5' />,
+          //     <MenuItem
+          //       key='geofence'
+          //       dense
+          //       disabled={!featureSuitableForGeofence}
+          //       onClick={
+          //         isCurrentGeofence
+          //           ? this._unsetSelectedFeatureAsGeofence
+          //           : this._setSelectedFeatureAsGeofence
+          //       }
+          //     >
+          //       <ListItemIcon>{null}</ListItemIcon>
+          //       {isCurrentGeofence ? 'Clear geofence' : 'Use as geofence'}
+          //     </MenuItem>
+          //   );
+          // }
 
           if (
             hasSelectedFeatures &&
@@ -523,7 +524,7 @@ const getContextProvider = createSelector(
     selectedUAVIds,
     geofencePolygonId,
     initialMissionId,
-    landingMissionId,
+    landingMissionId
   ) =>
     (context) => ({
       selectedFeatureIds,

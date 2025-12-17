@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { MessageSemantics } from '~/features/snackbar/types';
 import { Map, View, control, interaction, withMap } from '@collmot/ol-react';
 import { showNotification } from '~/features/snackbar/slice';
+import { Point } from 'ol/geom';
 
 import * as Condition from './conditions';
 import {
@@ -73,6 +74,7 @@ import { scrollToMapLocation } from '~/signals';
 import UAV from '~/model/uav';
 import { showError } from '~/features/snackbar/actions';
 import { getUAVById } from '~/features/uavs/selectors';
+import { getDistance } from 'ol/sphere';
 
 /* ********************************************************************** */
 
@@ -81,6 +83,86 @@ import { getUAVById } from '~/features/uavs/selectors';
  *
  * @returns {JSX.Node[]}  the layers of the map
  */
+
+import { Style, Text, Fill, Stroke } from 'ol/style';
+
+function sketchMeasurementStyle(feature) {
+  const geometry = feature.getGeometry();
+  if (!geometry) return null;
+
+  const coords = geometry.getCoordinates();
+  if (coords.length < 2) return null;
+
+  const result = computeCumulativeDistanceAndLastBearing(coords);
+  if (!result) return null;
+
+  return new Style({
+    geometry: new Point(result.position),
+    text: new Text({
+      text: `${result.distance.toFixed(1)} m\n${result.bearing.toFixed(1)}°`,
+      font: '14px sans-serif',
+      offsetY: -15,
+      fill: new Fill({ color: '#000' }),
+      stroke: new Stroke({ color: '#fff', width: 1 }),
+      textAlign: 'center',
+    }),
+  });
+}
+
+function computeCumulativeDistanceAndLastBearing(coords) {
+  if (!coords || coords.length < 2) return null;
+
+  let totalDistance = 0;
+
+  for (let i = 1; i < coords.length; i++) {
+    const p1 = lonLatFromMapViewCoordinate(coords[i - 1]);
+    const p2 = lonLatFromMapViewCoordinate(coords[i]);
+
+    totalDistance += getDistance(p1, p2);
+  }
+
+  // Bearing only from last segment
+  const start = lonLatFromMapViewCoordinate(coords[coords.length - 2]);
+  const end = lonLatFromMapViewCoordinate(coords[coords.length - 1]);
+
+  const dx = end[0] - start[0];
+  const dy = end[1] - start[1];
+  const bearing = (Math.atan2(dx, dy) * 180) / Math.PI;
+
+  return {
+    distance: totalDistance,
+    bearing: (bearing + 360) % 360,
+    position: coords[coords.length - 1],
+  };
+}
+
+const onDrawStartAnimate = (event) => {
+  const sketchFeature = event.feature;
+
+  sketchFeature.setStyle((feature) => {
+    const styles = [];
+
+    // Projected (cursor-following) line
+    styles.push(
+      new Style({
+        stroke: new Stroke({
+          color: '#ff0000',
+          width: 2,
+          lineDash: [8, 8],
+        }),
+      })
+    );
+
+    // Distance + bearing label
+    const labelStyle = sketchMeasurementStyle(feature);
+    if (labelStyle) {
+      styles.push(labelStyle);
+    }
+
+    return styles;
+  });
+};
+
 const MapViewLayersPresentation = ({
   layers,
   onFeaturesModified,
@@ -432,6 +514,7 @@ const MapViewInteractions = withMap((props) => {
       <interaction.AbortableDraw
         key='Draw'
         {...toolToDrawInteractionProps(selectedTool, props.map)}
+        onDrawStart={onDrawStartAnimate}
         onDrawEnd={onDrawEnded}
         abortCondition={Condition.escapeKeyDown}
       />

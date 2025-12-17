@@ -21,6 +21,7 @@ import ThreeDTopLevelView from './three-d';
 import StrikePanel from './stike';
 import CameraPanel from './camera';
 import SwarmPanel from './swarm';
+import SimulatorPanel from './simulator';
 import SpareDronePanel from './spareDrone';
 import VtolPanel from './VTOL';
 import TargetCNF from './gimbalTarget';
@@ -46,10 +47,11 @@ const views = {
   StrikePanel,
   CameraPanel,
   SwarmPanel,
+  SimulatorPanel,
   SpareDronePanel,
   VtolPanel,
   TargetCNF,
-  AltitudeSettings
+  AltitudeSettings,
 };
 
 export default views;

@@ -1,5 +1,5 @@
 import { type ErrorCode } from '~/flockwave/errors';
-import { type GPSPosition, type GPSFix } from '~/model/position';
+import { type GPSPosition, type GPSFix, HomePosition } from '~/model/position';
 import { type UAVAge, type UAVBattery } from '~/model/uav';
 import { type Identifier } from '~/utils/collections';
 import { type Coordinate3D } from '~/utils/math';
@@ -48,6 +48,8 @@ export type StoredUAV = {
   throttle?: number;
   distance_from_GCS?: number;
   bearing_from_GCS?: number;
+  homePosition?: HomePosition;
+  SwarmChainLink?: boolean;
 };
 
 export enum UAVDetailsDialogTab {

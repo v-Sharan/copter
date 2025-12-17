@@ -37,6 +37,7 @@ const StatusSummaryMiniTable = ({
   bearing_from_GCS,
   dispatch,
   uav_id,
+  homePosition,
 }) => {
   const [distance_from_GCS_meter, setDistanceFromGCS] = useState(1.01);
   const [bearing_from_GCS_meter, setBearingFromGCS] = useState(1.01);
@@ -48,12 +49,14 @@ const StatusSummaryMiniTable = ({
         id: uav_id,
       });
       console.log(res.body.home_dist);
+
       setDistanceFromGCS(res.body.home_dist[0]);
       setBearingFromGCS(res.body.home_dist[1]);
     } catch (e) {
       dispatch(showError(`${e} Message failed to send`));
     }
   };
+  console.log(homePosition);
 
   useEffect(() => {
     homeDistance('home_distance');
@@ -137,14 +140,14 @@ const StatusSummaryMiniTable = ({
 
   if (distance_from_GCS_meter) {
     rows.push([
-      'Distance From GCS',
+      'Distance From Home',
       formatNumberSafely(distance_from_GCS_meter, 2, 'm', naText),
     ]);
   }
 
   if (bearing_from_GCS_meter) {
     rows.push([
-      'Bearing From GCS',
+      'Bearing From Home',
       formatNumberSafely(bearing_from_GCS_meter, 2, '°', naText),
     ]);
   }

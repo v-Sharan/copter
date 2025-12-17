@@ -19,7 +19,7 @@ import DisplayTab from './DisplayTab';
 // import PreflightTab from './PreflightTab';
 // import ServerTab from './ServerTab';
 // import ThreeDViewTab from './ThreeDViewTab';
-import SwarmUavsTab from "./SwarmUavsTab";
+import SwarmUavsTab from './SwarmUavsTab';
 import UAVsTab from './UAVsTab';
 
 /* ===================================================================== */
@@ -49,7 +49,7 @@ const AppSettingsDialogPresentation = ({
       <Tab value='display' label={t('settings.tabs.display')} />
       {/*<Tab value='threeD' label={t('settings.tabs.threeDView')} />*/}
       <Tab value='uavs' label={t('settings.tabs.uavs')} />
-      <Tab value='swarm' label={"Swarm UAVS"} />
+      <Tab value='swarm' label={'Swarm UAVS'} />
       {/*<Tab value='preflight' label={t('settings.tabs.preflight')} />*/}
       {/*{window.bridge && window.bridge.isElectron ? (*/}
       {/*  <Tab value='server' label={t('settings.tabs.server')} />*/}

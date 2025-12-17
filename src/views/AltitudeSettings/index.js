@@ -1,1 +1,1 @@
-export { default } from './AltitudePannel'
+export { default } from './AltitudePannel';

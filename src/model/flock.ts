@@ -110,6 +110,7 @@ export default class Flock {
     // ID, update its own local status, and if the status was updated,
     // remember the UAV ID so we can ask the feature manager to refresh
     // the features of these UAVs
+    console.log(body);
 
     if (!body.status) {
       return;

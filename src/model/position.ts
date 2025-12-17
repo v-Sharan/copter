@@ -14,3 +14,8 @@ export type GPSPosition = {
   ahl?: number;
   agl?: number;
 };
+
+export type HomePosition = {
+  lat?: number;
+  lon?: number;
+};

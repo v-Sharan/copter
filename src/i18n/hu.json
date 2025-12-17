@@ -170,6 +170,7 @@
       "display": "Megjelenítés",
       "preflight": "Ellenőrzőlista",
       "server": "Szerver",
+      "simulator": "",
       "threeDView": "3D nézet",
       "uavs": "Drónok"
     },

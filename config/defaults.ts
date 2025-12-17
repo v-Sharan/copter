@@ -106,7 +106,7 @@ const defaults: Config = {
   tour: null,
 
   urls: {
-    help: 'https://doc.collmot.com/public/skybrush-live-doc/latest',
+    help: 'https://www.google.com/',
     exit: null,
   },
   strike_url: [

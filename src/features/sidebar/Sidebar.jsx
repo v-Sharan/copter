@@ -106,10 +106,10 @@ const Sidebar = ({ experimentalFeaturesEnabled, isOpen, t, workbench }) => (
           id='clock'
         /> */}
         <Module
-          id='vtol'
+          id='simulator'
           icon={<SwarmIcon />}
-          label={'VTOL Swarm'}
-          component='vtol'
+          label={'Simulator Panel'}
+          component='simulator'
         />
         <Module
           id='swarm'
@@ -119,9 +119,9 @@ const Sidebar = ({ experimentalFeaturesEnabled, isOpen, t, workbench }) => (
         />
 
         <Module
-          id={'AltitudeSetting'}
+          id={'AltitudeSettings'}
           icon={<SwarmIcon />}
-          component={'AltitudeSetting'}
+          component={'AltitudeSettings'}
           label={'Altitude Settings Panel'}
         />
       </ModuleTray>

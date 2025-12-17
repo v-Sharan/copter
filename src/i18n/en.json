@@ -170,6 +170,7 @@
       "display": "Display",
       "preflight": "Preflight",
       "server": "Server",
+      "simulator": "",
       "threeDView": "3D View",
       "uavs": "UAVs"
     },

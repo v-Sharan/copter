@@ -133,7 +133,7 @@ export const componentRegistry = {
     label: 'Strike',
     detachable: true,
   },
-  AltitudeSetting: {
+  AltitudeSettings: {
     component: views.AltitudeSettings,
     label: 'Altitude Settings',
     detachable: true,
@@ -154,11 +154,17 @@ export const componentRegistry = {
     label: 'Video Panel',
     detachable: true,
   },
-  vtol: {
-    component: views.VtolPanel,
-    label: 'Vtol Swarm Panel',
+  // vtol: {
+  //   component: views.VtolPanel,
+  //   label: 'Vtol Swarm Panel',
+  //   detachable: true,
+  // },
+  simulator: {
+    component: views.SimulatorPanel,
+    label: 'Simulator',
     detachable: true,
   },
+
   targetcnf: {
     component: views.TargetCNF,
     label: 'Target CNF Panel',

@@ -14,6 +14,7 @@ import { MessageSemantics } from '~/features/snackbar/types';
 import messageHub from '~/message-hub';
 import store from '~/store';
 import makeLogger from './logging';
+import { updateHomePosition } from '~/features/uavs/slice';
 import {
   getSelectedFeatureIds,
   getFeatureById,
@@ -145,6 +146,9 @@ const performMassOperation =
     try {
       const finalArgs = mapper ? mapper(args) : args;
       const isBroadcast = Boolean(finalArgs?.transport?.broadcast);
+      if (name === 'Motor on command') {
+        // console.log('Motor On Commanddddddddddd', args, updateHomePosition());
+      }
       const needsConfirmation =
         !skipConfirmation &&
         shouldConfirmUAVOperation(store.getState(), uavs, isBroadcast);
@@ -428,6 +432,7 @@ export function createUAVOperationThunks({
   return mapValues(OPERATION_MAP, (func) => () => (_dispatch, getState) => {
     const state = getState();
     const uavIds = getTargetedUAVIds(state);
+    console.log('Messaging.jssssssssss', uavIds, OPERATION_MAP, func);
     const options = {};
 
     if (getTransportOptions) {

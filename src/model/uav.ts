@@ -38,6 +38,7 @@ interface Status extends UAVStatusInfo {
   throttle?: number;
   distance?: number;
   bearing?: number;
+  SwarmChainLink?: boolean;
 }
 
 /**
@@ -66,6 +67,7 @@ export default class UAV {
   _throttle?: number;
   _distance_from_GCS?: number;
   _bearing_from_GCS?: number;
+  SwarmChainLink?: boolean;
 
   /**
    * Constructor.
@@ -104,6 +106,7 @@ export default class UAV {
     this.mode = undefined;
     this._airspeed = undefined;
     this._gimbalHeading = undefined;
+    this.SwarmChainLink = true;
   }
 
   /**
@@ -275,6 +278,7 @@ export default class UAV {
       throttle,
       distance,
       bearing,
+      SwarmChainLink,
     } = status;
     let errorList: ErrorCode[];
     let updated = false;
@@ -332,7 +336,10 @@ export default class UAV {
       this._throttle = throttle;
       updated = true;
     }
-
+    if (this.SwarmChainLink !== SwarmChainLink) {
+      this.SwarmChainLink = SwarmChainLink;
+      updated = true;
+    }
     if (mode !== undefined && this.mode !== mode) {
       this.mode = mode;
       updated = true;
@@ -428,6 +435,7 @@ export default class UAV {
       throttle: this._throttle,
       distance_from_GCS: this._distance_from_GCS,
       bearing_from_GCS: this._bearing_from_GCS,
+      SwarmChainLink: this.SwarmChainLink,
     };
   }
 }

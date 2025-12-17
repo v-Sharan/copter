@@ -6,6 +6,12 @@ type Group = {
 };
 interface SwarmSlice {
   coverage: number;
+  simLocation: string;
+  simPattern: string;
+  UAVRow: number;
+  UAVColumn: number;
+  UAVSpacing: number;
+  NoOfUAVs: number;
   camAlt: number;
   gridSpacing: number;
   overlap: number;
@@ -31,6 +37,12 @@ interface SwarmSlice {
 
 const initialState: SwarmSlice = {
   coverage: 500,
+  simPattern: 'Line',
+  simLocation: '12.934812, 80.050174',
+  NoOfUAVs: 1,
+  UAVSpacing: 10,
+  UAVRow: NaN,
+  UAVColumn: NaN,
   camAlt: 100,
   gridSpacing: 50,
   overlap: 10,
@@ -84,7 +96,21 @@ const { actions, reducer } = createSlice({
     changeAntennaBearing(state, action: PayloadAction<{ bearing: number }>) {
       state.antennaBearing = action.payload.bearing;
     },
-
+    changeNoUAVs(state, action: PayloadAction<{ NoOfUAVs: number }>) {
+      state.NoOfUAVs = action.payload.NoOfUAVs;
+    },
+    changesimLocation(state, action: PayloadAction<{ simLocation: string }>) {
+      state.simLocation = action.payload.simLocation;
+    },
+    changeUavSpacing(state, action: PayloadAction<{ UAVSpacing: number }>) {
+      state.UAVSpacing = action.payload.UAVSpacing;
+    },
+    changeUavRow(state, action: PayloadAction<{ UAVRow: number }>) {
+      state.UAVRow = action.payload.UAVRow;
+    },
+    changeUavColumn(state, action: PayloadAction<{ UAVColumn: number }>) {
+      state.UAVColumn = action.payload.UAVColumn;
+    },
     changeCoverage(state, action: PayloadAction<{ coverage: number }>) {
       state.coverage = action.payload.coverage;
     },
@@ -106,6 +132,10 @@ const { actions, reducer } = createSlice({
     changeRadius(state, action: PayloadAction<{ radius: number }>) {
       state.radius = action.payload.radius;
     },
+    changeSimPattern(state, action: PayloadAction<{ simPattern: string }>) {
+      state.simPattern = action.payload.simPattern;
+    },
+
     changeSpeed(state, action: PayloadAction<{ speed: number }>) {
       state.speed = action.payload.speed;
     },
@@ -151,9 +181,15 @@ export const {
   changeCameraLocation,
   updateCameraYaw,
   changeCoverage,
+  changeNoUAVs,
+  changeUavSpacing,
+  changeUavColumn,
+  changeUavRow,
+  changeSimPattern,
   changeCamAlt,
   changeOverlap,
   changeZoomLevel,
+  changesimLocation,
   changeRadius,
   changeSpeed,
   openGroupSplitDialog,

@@ -52,16 +52,29 @@ const { actions, reducer } = createSlice({
       // flock but not here
       deleteItemsByIds(state, action.payload);
     },
+    updateSwarmUavChain(state, action: PayloadAction) {
+
+    },
 
     updateAgesOfUAVs(
       state,
       action: PayloadAction<Record<StoredUAV['id'], StoredUAV['age']>>
     ) {
+      console.log('updateAgesOfUAVS');
       for (const [uavId, age] of Object.entries(action.payload)) {
         const uav = uavId ? state.byId[uavId] : undefined;
         if (uav) {
           uav.age = age;
         }
+      }
+    },
+
+    updateHomePosition(
+      state,
+      action: PayloadAction<Record<StoredUAV['id'], StoredUAV>>
+    ) {
+      for (const uav of Object.values(action.payload)) {
+        console.log('HomePositionupdate');
       }
     },
 
@@ -82,6 +95,7 @@ export const {
   updateAgesOfUAVs,
   updateUAVs,
   _removeUAVsByIds,
+  updateHomePosition,
 } = actions;
 
 export default reducer;

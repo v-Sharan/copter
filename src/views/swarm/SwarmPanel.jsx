@@ -172,6 +172,13 @@ const SwarmPanel = ({
   };
 
   const handleMsg = async (msg) => {
+    if (msg === 'add_link' || msg === 'remove_link') {
+      if (selectedUAVIds.length > 1) {
+        dispatch(showError(`Warning only one UAV able to Remove or Add`));
+        return;
+      }
+    }
+
     try {
       const res = await messageHub.sendMessage({
         type: 'X-UAV-socket',
@@ -372,7 +379,7 @@ const SwarmPanel = ({
           {/*</FormControl>*/}
         </Box>
 
-        <Box style={{ display: 'flex', gap: 5 }}>
+        {/* <Box style={{ display: 'flex', gap: 5 }}>
           <Button
             variant='contained'
             onClick={camhandleMsg.bind(this, 'start_capture')}
@@ -385,7 +392,7 @@ const SwarmPanel = ({
           >
             Stop Capture
           </Button>
-        </Box>
+        </Box> */}
 
         <Box style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
           <FormControl
@@ -424,21 +431,21 @@ const SwarmPanel = ({
             </Button>
             <Button
               variant='contained'
-              onClick={async () => await handleMsg('master')}
-              disabled={selectedUAVIds?.length !== 1}
+              onClick={async () => await handleMsg('stop')}
+              // disabled={selectedUAVIds?.length !== 1}
             >
-              Master
+              Stop Mission
             </Button>
-            <Button
+            {/* <Button
               variant='contained'
               onClick={async () => await handleMsg('offline')}
             >
               Offline
-            </Button>
+            </Button> */}
 
             {/* <Button */}
             {/* variant='contained' */}
-            {/* onClick={async () => await handlePoint('land')} */}
+            {/* onClick={as ync () => await handlePoint('land')} */}
             {/* > */}
             {/* Land */}
             {/* </Button> */}
@@ -447,6 +454,20 @@ const SwarmPanel = ({
               onClick={async () => await handleMsg('disperse')}
             >
               Disperse
+            </Button>
+            <Button
+              variant='contained'
+              onClick={() => handlePoint('aggregate')}
+              // disabled={selectedUAVIds.length === 0}
+            >
+              Aggregate
+            </Button>
+            <Button
+              variant='contained'
+              onClick={handleFenceMission}
+              // disabled={selectedUAVIds.length === 0}
+            >
+              Geo Fence
             </Button>
           </FormControl>
         </Box>
@@ -475,15 +496,17 @@ const SwarmPanel = ({
             {/*</Button>*/}
             <Button
               variant='contained'
+              disabled={selectedUAVIds.length === 0}
               onClick={async () => await handleMsg('add_link')}
             >
-              Add Link
+              Include UAV
             </Button>
             <Button
               variant='contained'
+              disabled={selectedUAVIds.length === 0}
               onClick={async () => await handleMsg('remove_link')}
             >
-              Remove Link
+              Exclude UAV
             </Button>
             <Button
               variant='contained'
@@ -492,19 +515,18 @@ const SwarmPanel = ({
             >
               Open Group
             </Button>
+
             <Button
               variant='contained'
-              onClick={() => handlePoint('aggregate')}
-              // disabled={selectedUAVIds.length === 0}
+              onClick={() => dispatch(DownloadMissionTrue())}
             >
-              Aggregate
+              show Trajectory
             </Button>
             <Button
               variant='contained'
-              onClick={handleFenceMission}
-              // disabled={selectedUAVIds.length === 0}
+              onClick={async () => await handleMsg('Home Goto')}
             >
-              Fence
+              Home Goto
             </Button>
             {/* Estimated time: {socketData.time} minutes */}
           </FormControl>
@@ -636,17 +658,17 @@ const SwarmPanel = ({
             Split Group
           </Button>
         </Box>
-        <FormControl
+        {/* <FormControl
           fullWidth
           style={{ display: 'flex', flexDirection: 'row', gap: 10 }}
-        >
-          {/*<Button variant='contained' onClick={async () => await handleMsg('remove_uav')}>*/}
-          {/*  Remove Uav*/}
-          {/*</Button>*/}
-          {/*<Button variant='contained' onClick={async () => await handleMsg('payload')}>*/}
-          {/*  Release Payload*/}
-          {/*</Button>*/}
-          <Button
+        > */}
+        {/*<Button variant='contained' onClick={async () => await handleMsg('remove_uav')}>*/}
+        {/*  Remove Uav*/}
+        {/*</Button>*/}
+        {/*<Button variant='contained' onClick={async () => await handleMsg('payload')}>*/}
+        {/*  Release Payload*/}
+        {/*</Button>*/}
+        {/* <Button
             variant='contained'
             onClick={() => dispatch(DownloadMissionTrue())}
           >
@@ -657,9 +679,9 @@ const SwarmPanel = ({
             onClick={async () => await handleMsg('Home Goto')}
           >
             Home Goto
-          </Button>
-          {/* <p>{antennaBearing.antBear} deg</p> */}
-        </FormControl>
+          </Button> */}
+        {/* <p>{antennaBearing.antBear} deg</p> */}
+        {/* </FormControl> */}
       </FormGroup>
     </Box>
   );

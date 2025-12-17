@@ -72,6 +72,17 @@ export const getUAVById = (state, uavId) => state.uavs.byId[uavId];
  * Returns the current position of the UAV with the given ID, given the current
  * state.
  */
+
+export const setUAVSwarmRemove = (state, uavId) => {
+  const uav = getUAVById(state, uavId);
+  return (uav.SwarmRemove = true);
+};
+
+export const setUAVSwarmAdd = (state, uavId) => {
+  const uav = getUAVById(state, uavId);
+  uav.SwarmRemove = false;
+  return true;
+};
 export const getCurrentGPSPositionByUavId = (state, uavId) => {
   const uav = getUAVById(state, uavId);
   return uav ? uav.position : undefined;
@@ -749,6 +760,13 @@ export function getSingleUAVStatusSummary(uav) {
     } else {
       textSemantics = errorSeverityToSemantics(severity);
     }
+  } else if (
+    uav.SwarmChainLink !== undefined &&
+    !uav.SwarmChainLink &&
+    uav.age == UAVAge.ACTIVE
+  ) {
+    text = 'swarmOff';
+    textSemantics = Status.SKIPPED;
   } else if (uav.position && Math.abs(uav.position.ahl) >= 0.3) {
     // UAV is in the air
     text = 'airborne';

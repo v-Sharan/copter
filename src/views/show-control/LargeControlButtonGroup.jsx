@@ -3,6 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from '@reduxjs/toolkit';
 
+import { updateHomePosition } from '~/features/uavs/slice';
+
 import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
@@ -164,6 +166,11 @@ export default connect(
             broadcast: areFlightCommandsBroadcast(state),
           };
         },
+
+        // updateHome
+        // updateHomePositionDialogBox(state,uavIds){
+        //     return updateHomePosition(state,uavIds)
+        // }
       }),
       dispatch
     ),
