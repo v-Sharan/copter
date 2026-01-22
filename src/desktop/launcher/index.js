@@ -62,6 +62,14 @@ function run(argv) {
     webContents.setBackgroundThrottling(false);
   });
 
+  app.on('before-quit', (event) => {
+    event.preventDefault();
+    // Notify all windows that we are quitting
+    console.log('App is quitting, notifying windows...');
+
+    // app.emit('app-before-quit');
+  });
+
   // Stop any locally spawned server processes when the app quits
   app.on('will-quit', async () => {
     // Note that this is _not_ called on Windows when the user shuts down,

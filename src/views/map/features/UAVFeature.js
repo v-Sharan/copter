@@ -15,16 +15,36 @@ import DroneImageError from '~/../assets/img/drone-x-black-error-32x32.png';
 // import DroneImageInfo from '~/../assets/img/ArmPlane.png';
 // import DroneImageWarning from '~/../assets/img/drone-x-black-warning-32x32.png';
 // import DroneImageError from '~/../assets/img/errorPlane.png';
-// import RvtImageIcon from '~/../assets/img/rvt.png';
+import RvtImageIcon from '~/../assets/img/rvt.png';
 import SelectionGlow from '~/../assets/img/GlowPlane.png';
 import { Severity } from '~/model/enums';
 import GimbalPolygon from '~/../assets/img/up1.png';
+import DroneImage1 from '~/../assets/img/drone_1.png';
+import DroneImage2 from '~/../assets/img/drone_2.png';
+import DroneImage3 from '~/../assets/img/drone_3.png';
+import DroneImage4 from '~/../assets/img/drone_4.png';
+import DroneImage5 from '~/../assets/img/drone_5.png';
+import DroneImage6 from '~/../assets/img/drone_6.png';
+import DroneImage7 from '~/../assets/img/drone_7.png';
+import DroneImage8 from '~/../assets/img/drone_8.png';
+
+const UavImages = {
+  '01': DroneImage1,
+  '02': DroneImage2,
+  '03': DroneImage3,
+  '04': DroneImage4,
+  '05': DroneImage5,
+  '06': DroneImage6,
+  '07': DroneImage7,
+  '08': DroneImage8,
+};
 
 const droneImages = {
   [Severity.INFO]: DroneImageInfo,
   [Severity.WARNING]: DroneImageWarning,
   [Severity.ERROR]: DroneImageError,
   [Severity.CRITICAL]: DroneImageError,
+  [Severity.SKIPPED]: DroneImageError,
 };
 
 const RVTImage = ['26', '27', '28', '29'];
@@ -193,15 +213,17 @@ export default class UAVFeature extends Feature {
   _setupStyle() {
     const styles = [];
 
+    console.log('Swarm UAV Status:', this.uavId, this._status);
+
     // Main image
     const iconImage = new Icon({
       rotateWithView: true,
       rotation: this._headingToRotation(),
       snapToPixel: false,
-      src: droneImages[this._status] || DroneImage,
-      // src: RVTImage.includes(this.uavId)
-      //   ? RvtImageIcon
-      //   : droneImages[this._status] || DroneImage,
+      // src: droneImages[this._status] || UavImages[this.uavId],
+      src: RVTImage.includes(this.uavId)
+        ? RvtImageIcon
+        : droneImages[this._status] || UavImages[this.uavId],
     });
     this._iconImage = iconImage;
 

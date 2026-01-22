@@ -49,7 +49,10 @@ import {
   removeFromSelection,
 } from '~/features/map/selection';
 import { getSelectedTool } from '~/features/map/tools';
-import { getSelectedFeatureIds } from '~/features/map-features/selectors';
+import {
+  getFeaturesInOrder,
+  getSelectedFeatureIds,
+} from '~/features/map-features/selectors';
 import { getVisibleLayersInOrder } from '~/selectors/ordered';
 import { getExtendedCoordinateFormatter } from '~/selectors/formatting';
 import {
@@ -712,10 +715,27 @@ class MapViewPresentation extends React.Component {
    * @return {ol.Feature[]} the selected OpenLayers features
    */
   _getSelectedTransformableFeatures = (map) => {
-    return filter(
-      findFeaturesById(map, this.props.selection),
-      isFeatureTransformable
+    const filteredTransformFeatures = this.props.features.filter(
+      (feature) => feature.label === 'outer'
     );
+    if (filteredTransformFeatures.length > 0) {
+      if (
+        'feature$' + filteredTransformFeatures[0].id ===
+        this.props.selection[0]
+      ) {
+        return [];
+      } else {
+        return filter(
+          findFeaturesById(map, this.props.selection),
+          isFeatureTransformable
+        );
+      }
+    } else {
+      return filter(
+        findFeaturesById(map, this.props.selection),
+        isFeatureTransformable
+      );
+    }
   };
 
   /**
@@ -945,6 +965,7 @@ const MapView = connect(
     selectedFeatures: getSelectedFeatureIds(state),
     selectedTool: getSelectedTool(state),
     selection: getSelection(state),
+    features: getFeaturesInOrder(state),
   })
 )(MapViewPresentation);
 

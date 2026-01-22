@@ -28,6 +28,7 @@ export enum Severity {
   WARNING = 'warning',
   ERROR = 'error',
   CRITICAL = 'critical',
+  SKIPPED = 'skipped',
 }
 
 /**

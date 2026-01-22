@@ -675,6 +675,13 @@ export function getSingleUAVStatusLevel(uav) {
   if (uav.age === UAVAge.GONE) {
     return Status.OFF;
   }
+  if (
+    uav.SwarmChainLink !== undefined &&
+    !uav.SwarmChainLink &&
+    uav.age == UAVAge.ACTIVE
+  ) {
+    return Status.SKIPPED;
+  }
 
   if (uav.age === UAVAge.INACTIVE) {
     return Status.WARNING;

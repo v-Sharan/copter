@@ -143,15 +143,35 @@ const MultipleSelectChip = ({
         zoomLevel: zoomLevel,
         overlap: overlap,
       });
+      // const resultArray = res?.body?.message || [];
+      console.log(
+        'Split Res',
+        res?.body?.message,
+        Array.isArray(res?.body?.message)
+      );
+      const isValid = Array.isArray(res?.body?.message);
+
       if (Boolean(res?.body?.message)) {
         showMsg('split Mission Message sent');
+      }
+      if (isValid) {
+        dispatch(
+          showNotification({
+            message: `Split Message sent`,
+            semantics: MessageSemantics.SUCCESS,
+          })
+        );
+      } else {
+        dispatch(showError(`Split failed to send - out of boundary`));
       }
       if (res?.body?.message[0]?.length == 0) {
         showMsg('Read a Empty Mission');
         return;
       }
       showMsg(typeof res.body.time?.toFixed(2));
+
       dispatch(setMissionFromServer(res.body.message));
+
       dispatch(setTime(res.body.time?.toFixed(2)));
     } catch (err) {
       showErrorMsg(err?.message);
